@@ -1,6 +1,8 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { useAuth } from "@/hooks/use-auth"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -16,28 +18,42 @@ import {
   Menu,
   X,
   LogOut,
+  Search,
+  GitCompareArrows,
+  Play,
+  Plug,
+  Package,
+  Banknote,
+  ClipboardCheck,
+  Briefcase,
+  Gavel,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-interface SidebarProps {
-  currentModule: string
-  onModuleChange: (module: string) => void
-}
-
 const menuItems = [
-  { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, badge: null },
-  { id: "receitas", label: "Receitas", icon: TrendingUp, badge: null },
-  { id: "despesas", label: "Despesas", icon: TrendingDown, badge: 3 },
-  { id: "orcamento", label: "Orçamento", icon: PieChart, badge: null },
-  { id: "conciliacao", label: "Conciliação", icon: CreditCard, badge: 5 },
-  { id: "relatorios", label: "Relatórios", icon: FileText, badge: null },
-  { id: "usuarios", label: "Usuários", icon: Users, badge: null },
-  { id: "configuracoes", label: "Configurações", icon: Settings, badge: null },
+  { href: "/", label: "Dashboard", icon: LayoutDashboard, badge: null },
+  { href: "/receitas", label: "Receitas", icon: TrendingUp, badge: null },
+  { href: "/despesas", label: "Despesas", icon: TrendingDown, badge: 3 },
+  { href: "/orcamento", label: "Orçamento", icon: PieChart, badge: null },
+  { href: "/conciliacao", label: "Conciliação", icon: CreditCard, badge: 5 },
+  { href: "/relatorios", label: "Relatórios", icon: FileText, badge: null },
+  { href: "/usuarios", label: "Usuários", icon: Users, badge: null },
+  { href: "/analise", label: "Análise", icon: Search, badge: null },
+  { href: "/contrapartida", label: "Contrapartida", icon: GitCompareArrows, badge: null },
+  { href: "/execucao", label: "Execução", icon: Play, badge: null },
+  { href: "/integracoes", label: "Integrações", icon: Plug, badge: null },
+  { href: "/objeto", label: "Objeto", icon: Package, badge: null },
+  { href: "/pagamentos", label: "Pagamentos", icon: Banknote, badge: null },
+  { href: "/prestacao", label: "Prestação", icon: ClipboardCheck, badge: null },
+  { href: "/projetos", label: "Projetos", icon: Briefcase, badge: null },
+  { href: "/sancoes", label: "Sanções", icon: Gavel, badge: null },
+  { href: "/configuracoes", label: "Configurações", icon: Settings, badge: null },
 ]
 
-export function Sidebar({ currentModule, onModuleChange }: SidebarProps) {
+export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false)
   const { user, logout } = useAuth()
+  const pathname = usePathname()
 
   return (
     <div
@@ -70,32 +86,29 @@ export function Sidebar({ currentModule, onModuleChange }: SidebarProps) {
       <nav className="flex-1 p-4 space-y-2">
         {menuItems.map((item) => {
           const Icon = item.icon
-          const isActive = currentModule === item.id
+          const isActive = pathname === item.href
 
           return (
-            <Button
-              key={item.id}
-              variant={isActive ? "default" : "ghost"}
-              className={cn(
-                "w-full justify-start gap-3 h-10",
-                isActive
-                  ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                  : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-                collapsed && "justify-center px-2",
-              )}
-              onClick={() => onModuleChange(item.id)}
-            >
-              <Icon className="h-4 w-4 flex-shrink-0" />
-              {!collapsed && (
-                <>
-                  <span className="flex-1 text-left">{item.label}</span>
-                  {item.badge && (
-                    <Badge variant="secondary" className="ml-auto">
-                      {item.badge}
-                    </Badge>
-                  )}
-                </>
-              )}
+            <Button asChild key={item.href} variant={isActive ? "default" : "ghost"} className={cn(
+              "w-full justify-start gap-3 h-10",
+              isActive
+                ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+              collapsed && "justify-center px-2",
+            )}>
+              <Link href={item.href}>
+                <Icon className="h-4 w-4 flex-shrink-0" />
+                {!collapsed && (
+                  <>
+                    <span className="flex-1 text-left">{item.label}</span>
+                    {item.badge && (
+                      <Badge variant="secondary" className="ml-auto">
+                        {item.badge}
+                      </Badge>
+                    )}
+                  </>
+                )}
+              </Link>
             </Button>
           )
         })}

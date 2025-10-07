@@ -4,40 +4,40 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Updated color tokens to match financial system design brief */
-  --background: #ffffff;
-  --foreground: #475569;
-  --card: #f1f5f9;
+  /* Updated color tokens for SIGA-PC government system design */
+  --background: #f8fafc;
+  --foreground: #1f2937;
+  --card: #ffffff;
   --card-foreground: #374151;
   --popover: #ffffff;
-  --popover-foreground: #475569;
-  --primary: #059669;
+  --popover-foreground: #1f2937;
+  --primary: #374151;
   --primary-foreground: #ffffff;
-  --secondary: #f1f5f9;
-  --secondary-foreground: #374151;
-  --muted: #f0fdf4;
-  --muted-foreground: #374151;
-  --accent: #10b981;
+  --secondary: #6366f1;
+  --secondary-foreground: #ffffff;
+  --muted: #f8fafc;
+  --muted-foreground: #1f2937;
+  --accent: #6366f1;
   --accent-foreground: #ffffff;
-  --destructive: #dc2626;
+  --destructive: #be123c;
   --destructive-foreground: #ffffff;
-  --border: #d1d5db;
-  --input: #f9fafb;
-  --ring: #059669;
-  --chart-1: #84cc16;
-  --chart-2: #10b981;
-  --chart-3: #0891b2;
-  --chart-4: #fbbf24;
-  --chart-5: #dc2626;
-  --radius: 0.5rem;
-  --sidebar: #f1f5f9;
-  --sidebar-foreground: #374151;
-  --sidebar-primary: #ffffff;
-  --sidebar-primary-foreground: #475569;
-  --sidebar-accent: #059669;
+  --border: #e5e7eb;
+  --input: #ffffff;
+  --ring: rgba(99, 102, 241, 0.5);
+  --chart-1: #6366f1;
+  --chart-2: #ec4899;
+  --chart-3: #be123c;
+  --chart-4: #164e63;
+  --chart-5: #374151;
+  --radius: 0.25rem;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #1f2937;
+  --sidebar-primary: #374151;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #6366f1;
   --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: #d1d5db;
-  --sidebar-ring: #10b981;
+  --sidebar-border: #e5e7eb;
+  --sidebar-ring: rgba(99, 102, 241, 0.5);
 }
 
 .dark {
@@ -47,32 +47,32 @@
   --card-foreground: #f1f5f9;
   --popover: #1e293b;
   --popover-foreground: #f1f5f9;
-  --primary: #10b981;
-  --primary-foreground: #ffffff;
-  --secondary: #334155;
+  --primary: #f1f5f9;
+  --primary-foreground: #0f172a;
+  --secondary: #4f46e5;
   --secondary-foreground: #f1f5f9;
-  --muted: #1e293b;
+  --muted: #334155;
   --muted-foreground: #94a3b8;
-  --accent: #059669;
-  --accent-foreground: #ffffff;
-  --destructive: #ef4444;
-  --destructive-foreground: #ffffff;
+  --accent: #4f46e5;
+  --accent-foreground: #f1f5f9;
+  --destructive: #dc2626;
+  --destructive-foreground: #f1f5f9;
   --border: #334155;
   --input: #1e293b;
-  --ring: #10b981;
-  --chart-1: #84cc16;
-  --chart-2: #10b981;
-  --chart-3: #0891b2;
-  --chart-4: #fbbf24;
-  --chart-5: #dc2626;
+  --ring: rgba(79, 70, 229, 0.5);
+  --chart-1: #4f46e5;
+  --chart-2: #ec4899;
+  --chart-3: #dc2626;
+  --chart-4: #0891b2;
+  --chart-5: #374151;
   --sidebar: #1e293b;
   --sidebar-foreground: #f1f5f9;
-  --sidebar-primary: #334155;
+  --sidebar-primary: #4f46e5;
   --sidebar-primary-foreground: #f1f5f9;
-  --sidebar-accent: #10b981;
-  --sidebar-accent-foreground: #ffffff;
+  --sidebar-accent: #334155;
+  --sidebar-accent-foreground: #f1f5f9;
   --sidebar-border: #334155;
-  --sidebar-ring: #059669;
+  --sidebar-ring: rgba(79, 70, 229, 0.5);
 }
 
 @theme inline {
