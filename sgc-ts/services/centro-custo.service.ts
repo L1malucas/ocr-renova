@@ -1,125 +1,34 @@
-export interface AtualizarCentroCustoDto {
-  /** @minLength 1 */
-  codigo: string;
-  /** @minLength 1 */
-  nome: string;
-  descricao?: string | null;
-  /** @format uuid */
-  paiId?: string | null;
-  /** @format uuid */
-  categoriaId: string;
-}
+import apiClient from '@/lib/api-client';
+import type { ApiResponse, PaginatedApiResponse } from '@/lib/types';
+import type { CentroCustoDto, CriarCentroCustoDto, AtualizarCentroCustoDto } from '@/models/centro-custo.model';
 
-export interface CentroCustoDto {
-  /** @format uuid */
-  id?: string;
-  codigo?: string | null;
-  nome?: string | null;
-  descricao?: string | null;
-  /** @format uuid */
-  paiId?: string | null;
-  filhos?: CentroCustoDto[] | null;
-  /** @format uuid */
-  categoriaId?: string;
-  nomeCategoria?: string | null;
-}
+// -----------------
+// Service Functions
+// -----------------
 
-export interface CentroCustoDtoApiResponse {
-  success?: boolean;
-  data?: CentroCustoDto;
-  messages?: string[] | null;
-}export interface CriarCentroCustoDto {
-  /** @minLength 1 */
-  codigo: string;
-  /** @minLength 1 */
-  nome: string;
-  descricao?: string | null;
-  /** @format uuid */
-  paiId?: string | null;
-  /** @format uuid */
-  categoriaId: string;
-}
-
-export interface CentroCustoDtoPagedApiResponse {
-  success?: boolean;
-  data?: CentroCustoDto[] | null;
-  messages?: string[] | null;
-  /** @format int32 */
+/** Parâmetros de paginação para listagens. */
+export interface ListParams {
   pageNumber?: number;
-  /** @format int32 */
   pageSize?: number;
-  /** @format int32 */
-  totalPages?: number;
-  /** @format int32 */
-  totalItems?: number;
 }
 
-    /**
-     * No description
-     *
-     * @tags CentrosCusto
-     * @name CentrosCustoList
-     * @request GET:/api/centros-custo
-     */
-    centrosCustoList: (
-      query?: {
-        /**
-         * @format int32
-         * @default 1
-         */
-        pageNumber?: number;
-        /**
-         * @format int32
-         * @default 10
-         */
-        pageSize?: number;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<CentroCustoDtoPagedApiResponse, ProblemDetails>({
-        path: `/api/centros-custo`,
-        method: "GET",
-        query: query,
-        format: "json",
-        ...params,
-      }),
+/**
+ * Busca uma lista paginada de Centros de Custo.
+ */
+export const getCentrosCusto = (params: ListParams): Promise<PaginatedApiResponse<CentroCustoDto[]>> => {
+  return apiClient.getPaginated('/centros-custo', { params });
+};
 
-    /**
-     * No description
-     *
-     * @tags CentrosCusto
-     * @name CentrosCustoCreate
-     * @request POST:/api/centros-custo
-     */
-    centrosCustoCreate: (
-      data: CriarCentroCustoDto,
-      params: RequestParams = {},
-    ) =>
-      this.request<CentroCustoDtoApiResponse, ObjectApiResponse>({
-        path: `/api/centros-custo`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
+/**
+ * Cria um novo Centro de Custo.
+ */
+export const createCentroCusto = (data: CriarCentroCustoDto): Promise<ApiResponse<CentroCustoDto>> => {
+  return apiClient.post('/centros-custo', data, { successMessage: 'Centro de Custo criado com sucesso.' });
+};
 
-    /**
-     * No description
-     *
-     * @tags CentrosCusto
-     * @name CentrosCustoUpdate
-     * @request PUT:/api/centros-custo/{id}
-     */
-    centrosCustoUpdate: (
-      id: string,
-      data: AtualizarCentroCustoDto,
-      params: RequestParams = {},
-    ) =>
-      this.request<void, ObjectApiResponse>({
-        path: `/api/centros-custo/${id}`,
-        method: "PUT",
-        body: data,
-        type: ContentType.Json,
-        ...params,
-      }),
+/**
+ * Atualiza um Centro de Custo existente.
+ */
+export const updateCentroCusto = (id: string, data: AtualizarCentroCustoDto): Promise<ApiResponse<void>> => {
+  return apiClient.put(`/centros-custo/${id}`, data, { successMessage: 'Centro de Custo atualizado com sucesso.' });
+};

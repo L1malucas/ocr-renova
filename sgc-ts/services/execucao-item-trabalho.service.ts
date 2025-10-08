@@ -1,139 +1,56 @@
-export interface AtualizarExecucaoItemPlanoTrabalhoDto {
-  /** @format double */
-  valor?: number | null;
-  /** @format date-time */
-  dataExecucao: string;
-  observacao?: string | null;
-}
-export interface CriarExecucaoItemPlanoTrabalhoDto {
-  /** @format uuid */
-  itemPlanoTrabalhoId: string;
-  /** @format double */
-  valor?: number | null;
-  /** @format date-time */
-  dataExecucao: string;
-  observacao?: string | null;
-}
+import apiClient from '@/lib/api-client';
+import type { ApiResponse, PaginatedApiResponse } from '@/lib/types';
+import { ExecucaoItemPlanoTrabalhoDto, CriarExecucaoItemPlanoTrabalhoDto, AtualizarExecucaoItemPlanoTrabalhoDto } from '@/models/execucao-item-plano-trabalho.model';
 
-export interface ExecucaoItemPlanoTrabalhoDto {
-  /** @format uuid */
-  id?: string;
-  /** @format uuid */
-  itemPlanoTrabalhoId?: string;
-  /** @format double */
-  valor?: number | null;
-  /** @format date-time */
-  dataExecucao?: string;
-  /** @format uuid */
-  usuarioExecutorId?: string | null;
-  observacao?: string | null;
-}
 
-export interface ExecucaoItemPlanoTrabalhoDtoApiResponse {
-  success?: boolean;
-  data?: ExecucaoItemPlanoTrabalhoDto;
-  messages?: string[] | null;
-}
-
-export interface ExecucaoItemPlanoTrabalhoDtoListPagedApiResponse {
-  success?: boolean;
-  data?: ExecucaoItemPlanoTrabalhoDto[][] | null;
-  messages?: string[] | null;
-  /** @format int32 */
+/** Parâmetros de paginação para listagens. */
+export interface ListParams {
   pageNumber?: number;
-  /** @format int32 */
   pageSize?: number;
-  /** @format int32 */
-  totalPages?: number;
-  /** @format int32 */
-  totalItems?: number;
+
 }
 
-    /**
-     * No description
-     *
-     * @tags ExecucoesItemPlanoTrabalho
-     * @name ItensPlanoTrabalhoExecucoesList
-     * @request GET:/api/itens-plano-trabalho/{itemId}/execucoes
-     */
-    itensPlanoTrabalhoExecucoesList: (
-      itemId: string,
-      query?: {
-        /**
-         * @format int32
-         * @default 1
-         */
-        pageNumber?: number;
-        /**
-         * @format int32
-         * @default 10
-         */
-        pageSize?: number;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<ExecucaoItemPlanoTrabalhoDtoListPagedApiResponse, any>({
-        path: `/api/itens-plano-trabalho/${itemId}/execucoes`,
-        method: "GET",
-        query: query,
-        format: "json",
-        ...params,
-      }),
+/**
+ * Busca uma lista paginada de execuções para um item do plano de trabalho específico.
+ */
+export const getExecucoesByItemPlanoTrabalho = (
+  itemId: string,
+  params: ListParams
 
-    /**
-     * No description
-     *
-     * @tags ExecucoesItemPlanoTrabalho
-     * @name ItensPlanoTrabalhoExecucoesCreate
-     * @request POST:/api/itens-plano-trabalho/{itemId}/execucoes
-     */
-    itensPlanoTrabalhoExecucoesCreate: (
-      itemId: string,
-      data: CriarExecucaoItemPlanoTrabalhoDto,
-      params: RequestParams = {},
-    ) =>
-      this.request<ExecucaoItemPlanoTrabalhoDtoApiResponse, ObjectApiResponse>({
-        path: `/api/itens-plano-trabalho/${itemId}/execucoes`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
+): Promise<PaginatedApiResponse<ExecucaoItemPlanoTrabalhoDto[]>> => {
+  return apiClient.getPaginated(`/itens-plano-trabalho/${itemId}/execucoes`, { params });
+};
 
-    /**
-     * No description
-     *
-     * @tags ExecucoesItemPlanoTrabalho
-     * @name ExecucoesItemPlanoTrabalhoUpdate
-     * @request PUT:/api/execucoes-item-plano-trabalho/{execucaoId}
-     */
-    execucoesItemPlanoTrabalhoUpdate: (
-      execucaoId: string,
-      data: AtualizarExecucaoItemPlanoTrabalhoDto,
-      params: RequestParams = {},
-    ) =>
-      this.request<void, ObjectApiResponse>({
-        path: `/api/execucoes-item-plano-trabalho/${execucaoId}`,
-        method: "PUT",
-        body: data,
-        type: ContentType.Json,
-        ...params,
-      }),
+/**
+ * Cria uma nova execução para um item do plano de trabalho.
+ */
+export const createExecucaoItemPlanoTrabalho = (
+  itemId: string,
+  data: CriarExecucaoItemPlanoTrabalhoDto
 
-    /**
-     * No description
-     *
-     * @tags ExecucoesItemPlanoTrabalho
-     * @name ExecucoesItemPlanoTrabalhoDelete
-     * @request DELETE:/api/execucoes-item-plano-trabalho/{execucaoId}
-     */
-    execucoesItemPlanoTrabalhoDelete: (
-      execucaoId: string,
-      params: RequestParams = {},
-    ) =>
-      this.request<void, ObjectApiResponse>({
-        path: `/api/execucoes-item-plano-trabalho/${execucaoId}`,
-        method: "DELETE",
-        ...params,
-      }),
+): Promise<ApiResponse<ExecucaoItemPlanoTrabalhoDto>> => {
+  return apiClient.post(`/itens-plano-trabalho/${itemId}/execucoes`, data, {
+    successMessage: 'Execução registrada com sucesso.',
+
+  });
+};
+
+
+export const updateExecucaoItemPlanoTrabalho = (
+  execucaoId: string,
+  data: AtualizarExecucaoItemPlanoTrabalhoDto
+
+): Promise<ApiResponse<void>> => {
+  return apiClient.put(`/execucoes-item-plano-trabalho/${execucaoId}`, data, {
+    successMessage: 'Execução atualizada com sucesso.',
+
+  });
+};
+
+
+export const deleteExecucaoItemPlanoTrabalho = (execucaoId: string): Promise<ApiResponse<void>> => {
+  return apiClient.delete(`/execucoes-item-plano-trabalho/${execucaoId}`, {
+    successMessage: 'Execução excluída com sucesso.',
+
+  });
+};

@@ -21,9 +21,11 @@ export interface HttpClientConfig {
 }
 
 export class HttpClient {
+  public readonly baseURL: string;
   private readonly instance: AxiosInstance;
 
   constructor(config: HttpClientConfig) {
+    this.baseURL = config.baseURL;
     this.instance = axios.create({
       baseURL: config.baseURL,
       timeout: config.timeout || 30000,
@@ -81,8 +83,13 @@ export class HttpClient {
     );
   }
 
-  public async get<T>(url: string, config?: CustomRequestConfig): Promise<ApiResponse<T> | PaginatedApiResponse<T>> {
-    const response = await this.instance.get<ApiResponse<T> | PaginatedApiResponse<T>>(url, config);
+  public async get<T>(url: string, config?: CustomRequestConfig): Promise<ApiResponse<T>> {
+    const response = await this.instance.get<ApiResponse<T>>(url, config);
+    return response.data;
+  }
+
+  public async getPaginated<T>(url: string, config?: CustomRequestConfig): Promise<PaginatedApiResponse<T>> {
+    const response = await this.instance.get<PaginatedApiResponse<T>>(url, config);
     return response.data;
   }
 

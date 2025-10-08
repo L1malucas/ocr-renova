@@ -1,116 +1,48 @@
-export interface DespesaDto {
-  /** @format uuid */
-  id?: string;
-  descricao?: string | null;
-  /** @format double */
-  valor?: number;
-  /** @format date-time */
-  dataDespesa?: string;
-  estaPaga?: boolean;
-  foraDoOrcamento?: boolean;
-  /** @format uuid */
-  linhaOrcamentariaId?: string;
-  /** @format uuid */
-  centroCustoId?: string | null;
-  nomeCentroCusto?: string | null;
-  /** @format uuid */
-  fornecedorId?: string | null;
-  nomeFornecedor?: string | null;
-  /** @format uuid */
-  categoriaId?: string;
-  nomeCategoria?: string | null;
-}
-export interface DespesaDtoApiResponse {
-  success?: boolean;
-  data?: DespesaDto;
-  messages?: string[] | null;
-}
+import apiClient from '@/lib/api-client';
+import type { ApiResponse, PaginatedApiResponse } from '@/lib/types';
+import type { DespesaDto, CriarDespesaDto, AtualizarDespesaDto } from '@/models/despesa.model';
 
-export interface DespesaDtoPagedApiResponse {
-  success?: boolean;
-  data?: DespesaDto[] | null;
-  messages?: string[] | null;
-  /** @format int32 */
+// -----------------
+// Service Functions
+// -----------------
+
+/** Parâmetros de paginação para listagens. */
+export interface ListParams {
   pageNumber?: number;
-  /** @format int32 */
   pageSize?: number;
-  /** @format int32 */
-  totalPages?: number;
-  /** @format int32 */
-  totalItems?: number;
 }
-    /**
-     * No description
-     *
-     * @tags Despesas
-     * @name DespesasList
-     * @request GET:/api/despesas
-     */
-    despesasList: (
-      query?: {
-        /**
-         * @format int32
-         * @default 1
-         */
-        pageNumber?: number;
-        /**
-         * @format int32
-         * @default 10
-         */
-        pageSize?: number;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<DespesaDtoPagedApiResponse, ProblemDetails>({
-        path: `/api/despesas`,
-        method: "GET",
-        query: query,
-        format: "json",
-        ...params,
-      }),
 
-    /**
-     * No description
-     *
-     * @tags Despesas
-     * @name DespesasCreate
-     * @request POST:/api/despesas
-     */
-    despesasCreate: (data: CriarDespesaDto, params: RequestParams = {}) =>
-      this.request<DespesaDtoApiResponse, ObjectApiResponse>({
-        path: `/api/despesas`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
+/**
+ * Busca uma lista paginada de Despesas.
+ */
+export const getDespesas = (params: ListParams): Promise<PaginatedApiResponse<DespesaDto[]>> => {
+  return apiClient.getPaginated('/despesas', { params });
+};
 
-    /**
-     * No description
-     *
-     * @tags Despesas
-     * @name DespesasDetail
-     * @request GET:/api/despesas/{id}
-     */
-    despesasDetail: (id: string, params: RequestParams = {}) =>
-      this.request<DespesaDtoApiResponse, ObjectApiResponse>({
-        path: `/api/despesas/${id}`,
-        method: "GET",
-        format: "json",
-        ...params,
-      }),
+/**
+ * Busca uma Despesa pelo seu ID.
+ */
+export const getDespesaById = (id: string): Promise<ApiResponse<DespesaDto>> => {
+  return apiClient.get(`/despesas/${id}`);
+};
 
-    /**
-     * No description
-     *
-     * @tags Despesas
-     * @name DespesasDelete
-     * @request DELETE:/api/despesas/{id}
-     */
-    despesasDelete: (id: string, params: RequestParams = {}) =>
-      this.request<void, ObjectApiResponse>({
-        path: `/api/despesas/${id}`,
-        method: "DELETE",
-        ...params,
-      }),
+/**
+ * Cria uma nova Despesa.
+ */
+export const createDespesa = (data: CriarDespesaDto): Promise<ApiResponse<DespesaDto>> => {
+  return apiClient.post('/despesas', data, { successMessage: 'Despesa criada com sucesso.' });
+};
+
+/**
+ * Atualiza uma Despesa existente.
+ */
+export const updateDespesa = (id: string, data: AtualizarDespesaDto): Promise<ApiResponse<DespesaDto>> => {
+  return apiClient.put(`/despesas/${id}`, data, { successMessage: 'Despesa atualizada com sucesso.' });
+};
+
+/**
+ * Exclui uma Despesa pelo seu ID.
+ */
+export const deleteDespesa = (id: string): Promise<ApiResponse<void>> => {
+  return apiClient.delete(`/despesas/${id}`, { successMessage: 'Despesa excluída com sucesso.' });
+};

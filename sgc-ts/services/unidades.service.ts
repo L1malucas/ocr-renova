@@ -1,139 +1,54 @@
-    /**
-     * No description
-     *
-     * @tags Unidades
-     * @name UnidadesUpdate
-     * @request PUT:/api/unidades/{id}
-     */{
+import apiClient from '@/lib/api-client';
+import type { ApiResponse, PaginatedApiResponse } from '@/lib/types';
+import type {
+  UnidadeDto,
+  CriarUnidadeDto,
+  AtualizarUnidadeDto,
+  UnidadeDtoApiResponse,
+  UnidadeDtoPagedApiResponse,
+} from '@/models/unidade.model';
 
-  /**
-* No description
-*
-* @tags Unidades
-* @name UnidadesList
-* @request GET:/api/unidades
-*/
-  unidadesList: (
-    query?: {
-      /**
-       * @format int32
-       * @default 1
-       */
-      pageNumber?: number;
-      /**
-       * @format int32
-       * @default 10
-       */
-      pageSize?: number;
-    },
-    params: RequestParams = {},
-  ) =>
-    this.request<UnidadeDtoPagedApiResponse, ProblemDetails>({
-      path: `/api/unidades`,
-      method: "GET",
-      query: query,
-      format: "json",
-      ...params,
-    }),
+// -----------------
+// Service Functions
+// -----------------
 
-    /**
-     * No description
-     *
-     * @tags Unidades
-     * @name UnidadesDetail
-     * @request GET:/api/unidades/{id}
-     */
-    unidadesDetail: (id: string, params: RequestParams = {}) =>
-      this.request<UnidadeDtoApiResponse, ObjectApiResponse>({
-        path: `/api/unidades/${id}`,
-        method: "GET",
-        format: "json",
-        ...params,
-      }),
-      unidadesUpdate: (
-        id: string,
-        data: AtualizarUnidadeDto,
-        params: RequestParams = {},
-      ) =>
-        this.request<void, ObjectApiResponse>({
-          path: `/api/unidades/${id}`,
-          method: "PUT",
-          body: data,
-          type: ContentType.Json,
-          ...params,
-        })
-}
-export interface AtualizarUnidadeDto {
-  /** @minLength 1 */
-  nome: string;
-  /** @minLength 1 */
-  cnpj: string;
-  codigoCnes?: string | null;
-  telefonePrincipal?: string | null;
-  /** @format email */
-  emailPrincipal?: string | null;
-}
-export interface CriarDespesaDto {
-  /** @minLength 1 */
-  descricao: string;
-  /**
-   * @format double
-   * @min 0.01
-   */
-  valor: number;
-  /** @format date-time */
-  dataDespesa: string;
-  /** @format uuid */
-  linhaOrcamentariaId: string;
-  /** @format uuid */
-  centroCustoId?: string | null;
-  /** @format uuid */
-  fornecedorId?: string | null;
-  /** @format uuid */
-  categoriaId: string;
-  estaPaga?: boolean;
-  foraDoOrcamento?: boolean;
-  justificativa?: string | null;
-}export interface CriarUnidadeDto {
-  /** @minLength 1 */
-  nome: string;
-  /** @minLength 1 */
-  cnpj: string;
-  codigoCnes?: string | null;
-  telefonePrincipal?: string | null;
-  /** @format email */
-  emailPrincipal?: string | null;
-  /** @format uuid */
-  organizacaoSocialId: string;
-}
-export interface UnidadeDto {
-  /** @format uuid */
-  id?: string;
-  nome?: string | null;
-  cnpj?: string | null;
-  codigoCnes?: string | null;
-  telefonePrincipal?: string | null;
-  emailPrincipal?: string | null;
-  /** @format uuid */
-  organizacaoSocialId?: string;
-}
-
-export interface UnidadeDtoApiResponse {
-  success?: boolean;
-  data?: UnidadeDto;
-  messages?: string[] | null;
-}
-
-export interface UnidadeDtoPagedApiResponse {
-  success?: boolean;
-  data?: UnidadeDto[] | null;
-  messages?: string[] | null;
-  /** @format int32 */
+/** Parâmetros de paginação para listagens. */
+export interface ListParams {
   pageNumber?: number;
-  /** @format int32 */
   pageSize?: number;
-  /** @format int32 */
-  totalPages?: number;
-  /** @format int32 */
-  totalItems?: number;
 }
+
+/**
+ * Busca uma lista paginada de Unidades.
+ */
+export const getUnidades = (params: ListParams): Promise<UnidadeDtoPagedApiResponse> => {
+  return apiClient.getPaginated('/unidades', { params });
+};
+
+/**
+ * Busca uma Unidade pelo seu ID.
+ */
+export const getUnidadeById = (id: string): Promise<UnidadeDtoApiResponse> => {
+  return apiClient.get(`/unidades/${id}`);
+};
+
+/**
+ * Cria uma nova Unidade.
+ */
+export const createUnidade = (data: CriarUnidadeDto): Promise<UnidadeDtoApiResponse> => {
+  return apiClient.post('/unidades', data, { successMessage: 'Unidade criada com sucesso.' });
+};
+
+/**
+ * Atualiza uma Unidade existente.
+ */
+export const updateUnidade = (id: string, data: AtualizarUnidadeDto): Promise<ApiResponse<void>> => {
+  return apiClient.put(`/unidades/${id}`, data, { successMessage: 'Unidade atualizada com sucesso.' });
+};
+
+/**
+ * Exclui uma Unidade pelo seu ID.
+ */
+export const deleteUnidade = (id: string): Promise<ApiResponse<void>> => {
+  return apiClient.delete(`/unidades/${id}`, { successMessage: 'Unidade excluída com sucesso.' });
+};

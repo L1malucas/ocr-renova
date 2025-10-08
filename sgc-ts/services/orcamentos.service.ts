@@ -1,72 +1,42 @@
-    /**
-     * No description
-     *
-     * @tags Orcamentos
-     * @name ContratosOrcamentoList
-     * @request GET:/api/contratos/{contratoId}/orcamento
-     */export interface CriarOrcamentoDto {
-  /** @minLength 1 */
-  nome: string;
-  descricao?: string | null;
-  /** @format uuid */
-  contratoId: string;
-}
+import apiClient from '@/lib/api-client';
+import type { ApiResponse } from '@/lib/types';
+import type { OrcamentoDto, CriarOrcamentoDto, AtualizarOrcamentoDto } from '@/models/orcamento.model';
 
-export interface OrcamentoDto {
-  /** @format uuid */
-  id?: string;
-  nome?: string | null;
-  descricao?: string | null;
-  /** @format int32 */
-  versao?: number;
-  status?: string | null;
-  /** @format uuid */
-  contratoId?: string;
-  linhasOrcamentarias?: LinhaOrcamentariaDto[] | null;
-}
+// -----------------
+// Service Functions
+// -----------------
 
-export interface OrcamentoDtoApiResponse {
-  success?: boolean;
-  data?: OrcamentoDto;
-  messages?: string[] | null;
-}
+/**
+ * Busca o orçamento associado a um contrato específico.
+ */
+export const getOrcamentoByContratoId = (contratoId: string): Promise<ApiResponse<OrcamentoDto>> => {
+  return apiClient.get(`/contratos/${contratoId}/orcamento`);
+};
 
-    contratosOrcamentoList: (contratoId: string, params: RequestParams = {}) =>
-      this.request<OrcamentoDtoApiResponse, ObjectApiResponse>({
-        path: `/api/contratos/${contratoId}/orcamento`,
-        method: "GET",
-        format: "json",
-        ...params,
-      }),
+/**
+ * Busca um Orçamento pelo seu ID.
+ */
+export const getOrcamentoById = (id: string): Promise<ApiResponse<OrcamentoDto>> => {
+  return apiClient.get(`/orcamentos/${id}`);
+};
 
-    /**
-     * No description
-     *
-     * @tags Orcamentos
-     * @name OrcamentosDetail
-     * @request GET:/api/orcamentos/{id}
-     */
-    orcamentosDetail: (id: string, params: RequestParams = {}) =>
-      this.request<OrcamentoDtoApiResponse, ObjectApiResponse>({
-        path: `/api/orcamentos/${id}`,
-        method: "GET",
-        format: "json",
-        ...params,
-      }),
+/**
+ * Cria um novo Orçamento.
+ */
+export const createOrcamento = (data: CriarOrcamentoDto): Promise<ApiResponse<OrcamentoDto>> => {
+  return apiClient.post('/orcamentos', data, { successMessage: 'Orçamento criado com sucesso.' });
+};
 
-    /**
-     * No description
-     *
-     * @tags Orcamentos
-     * @name OrcamentosCreate
-     * @request POST:/api/orcamentos
-     */
-    orcamentosCreate: (data: CriarOrcamentoDto, params: RequestParams = {}) =>
-      this.request<OrcamentoDtoApiResponse, ObjectApiResponse>({
-        path: `/api/orcamentos`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
+/**
+ * Atualiza um Orçamento existente.
+ */
+export const updateOrcamento = (id: string, data: AtualizarOrcamentoDto): Promise<ApiResponse<void>> => {
+  return apiClient.put(`/orcamentos/${id}`, data, { successMessage: 'Orçamento atualizado com sucesso.' });
+};
+
+/**
+ * Exclui um Orçamento pelo seu ID.
+ */
+export const deleteOrcamento = (id: string): Promise<ApiResponse<void>> => {
+  return apiClient.delete(`/orcamentos/${id}`, { successMessage: 'Orçamento excluído com sucesso.' });
+};

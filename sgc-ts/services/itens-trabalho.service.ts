@@ -1,129 +1,28 @@
-    /**
-     * No description
-     *
-     * @tags ItensPlanoTrabalho
-     * @name PlanosTrabalhoItensCreate
-     * @request POST:/api/planos-trabalho/{planoTrabalhoId}/itens
-     */export interface CriarItemPlanoTrabalhoDto {
-  /** @format uuid */
-  planoTrabalhoId: string;
-  /** @format uuid */
-  itemPaiId?: string | null;
-  /** @minLength 1 */
-  objetivo: string;
-  /** @minLength 1 */
-  acao: string;
-  descricao?: string | null;
-  /** @format double */
-  valorMeta?: number | null;
-  tipoMetrica: TipoMetrica;
-  unidadeMedida?: string | null;
-  frequencia?: Frequencia;
-  obrigatorio?: boolean;
-  /** @format date-time */
-  dataInicio: string;
-  /** @format date-time */
-  dataFim: string;
-  /** @format uuid */
-  categoriaId: string;
-}
+import apiClient from '@/lib/api-client';
+import type { ApiResponse } from '@/lib/types';
+import type { ItemPlanoTrabalhoDto, CriarItemPlanoTrabalhoDto, AtualizarItemPlanoTrabalhoDto } from '@/models/item-plano-trabalho.model';
 
-export interface ItemPlanoTrabalhoDto {
-  /** @format uuid */
-  id?: string;
-  objetivo?: string | null;
-  acao?: string | null;
-  descricao?: string | null;
-  status?: string | null;
-  /** @format double */
-  valorMeta?: number | null;
-  tipoMetrica?: string | null;
-  unidadeMedida?: string | null;
-  frequencia?: string | null;
-  obrigatorio?: boolean;
-  /** @format date-time */
-  dataInicio?: string;
-  /** @format date-time */
-  dataFim?: string;
-  /** @format uuid */
-  itemPaiId?: string | null;
-  subItens?: ItemPlanoTrabalhoDto[] | null;
-  /** @format uuid */
-  categoriaId?: string;
-  nomeCategoria?: string | null;
-}
+// -----------------
+// Service Functions
+// -----------------
 
-export interface ItemPlanoTrabalhoDtoApiResponse {
-  success?: boolean;
-  data?: ItemPlanoTrabalhoDto;
-  messages?: string[] | null;
-}
+/**
+ * Cria um novo item no plano de trabalho associado a um plano de trabalho específico.
+ */
+export const createItemPlanoTrabalho = (planoTrabalhoId: string, data: CriarItemPlanoTrabalhoDto
 
-    planosTrabalhoItensCreate: (
-      planoTrabalhoId: string,
-      data: CriarItemPlanoTrabalhoDto,
-      params: RequestParams = {},
-    ) =>
-      this.request<ItemPlanoTrabalhoDtoApiResponse, ObjectApiResponse>({
-        path: `/api/planos-trabalho/${planoTrabalhoId}/itens`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
+): Promise<ApiResponse<ItemPlanoTrabalhoDto>> => {
+    return apiClient.post(`/planos-trabalho/${planoTrabalhoId}/itens`, data, { successMessage: 'Item do Plano de Trabalho criado com sucesso.', });
+};
 
-    /**
-     * No description
-     *
-     * @tags ItensPlanoTrabalho
-     * @name ItensPlanoTrabalhoUpdate
-     * @request PUT:/api/itens-plano-trabalho/{itemId}
-     */
-    itensPlanoTrabalhoUpdate: (
-      itemId: string,
-      data: AtualizarItemPlanoTrabalhoDto,
-      params: RequestParams = {},
-    ) =>
-      this.request<void, ObjectApiResponse>({
-        path: `/api/itens-plano-trabalho/${itemId}`,
-        method: "PUT",
-        body: data,
-        type: ContentType.Json,
-        ...params,
-      }),
+/*** Atualiza um item do plano de trabalho existente.*/
+export const updateItemPlanoTrabalho = (itemId: string, data: AtualizarItemPlanoTrabalhoDto
 
-    /**
-     * No description
-     *
-     * @tags ItensPlanoTrabalho
-     * @name ItensPlanoTrabalhoDelete
-     * @request DELETE:/api/itens-plano-trabalho/{itemId}
-     */
-    itensPlanoTrabalhoDelete: (itemId: string, params: RequestParams = {}) =>
-      this.request<void, ObjectApiResponse>({
-        path: `/api/itens-plano-trabalho/${itemId}`,
-        method: "DELETE",
-        ...params,
-      }),
+): Promise<ApiResponse<void>> => {
+    return apiClient.put(`/itens-plano-trabalho/${itemId}`, data, { successMessage: 'Item do Plano de Trabalho atualizado com sucesso.', });
+};
 
-
-export interface AtualizarItemPlanoTrabalhoDto {
-  /** @minLength 1 */
-  objetivo: string;
-  /** @minLength 1 */
-  acao: string;
-  descricao?: string | null;
-  /** @format double */
-  valorMeta?: number | null;
-  tipoMetrica: TipoMetrica;
-  unidadeMedida?: string | null;
-  frequencia?: Frequencia;
-  obrigatorio?: boolean;
-  /** @format date-time */
-  dataInicio: string;
-  /** @format date-time */
-  dataFim: string;
-  /** @format uuid */
-  categoriaId: string;
-}
+/*** Exclui um item do plano de trabalho pelo seu ID.*/
+export const deleteItemPlanoTrabalho = (itemId: string): Promise<ApiResponse<void>> => {
+    return apiClient.delete(`/itens-plano-trabalho/${itemId}`, { successMessage: 'Item do Plano de Trabalho excluído com sucesso.', });
+};

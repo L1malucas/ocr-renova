@@ -1,123 +1,67 @@
+import apiClient from '@/lib/api-client';
+import type { ApiResponse, PaginatedApiResponse } from '@/lib/types';
+import type { AnexoDto, CreateAnexoParams } from '@/models/anexo.model';
 
-
-export interface AnexoDto {
-  /** @format uuid */
-  id?: string;
-  nomeArquivo?: string | null;
-  caminhoArquivo?: string | null;
-  descricao?: string | null;
-  tipoMime?: string | null;
-  /** @format int64 */
-  tamanhoBytes?: number;
-}
-
-export interface AnexoDtoApiResponse {
-  success?: boolean;
-  data?: AnexoDto;
-  messages?: string[] | null;
-}
-
-export interface AnexoDtoPagedApiResponse {
-  success?: boolean;
-  data?: AnexoDto[] | null;
-  messages?: string[] | null;
-  /** @format int32 */
-  pageNumber?: number;
-  /** @format int32 */
-  pageSize?: number;
-  /** @format int32 */
-  totalPages?: number;
-  /** @format int32 */
-  totalItems?: number;
-}
-
+// -----------------
+// Service Functions
+// -----------------
 
 /**
-     * No description
-     *
-     * @tags Anexos
-     * @name AnexosList
-     * @request GET:/api/{recurso}/{recursoId}/anexos
-     */
-    anexosList: (
-      recurso: string,
-      recursoId: string,
-      query?: {
-        /**
-         * @format int32
-         * @default 1
-         */
-        pageNumber?: number;
-        /**
-         * @format int32
-         * @default 10
-         */
-        pageSize?: number;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<AnexoDtoPagedApiResponse, ProblemDetails>({
-        path: `/api/${recurso}/${recursoId}/anexos`,
-        method: "GET",
-        query: query,
-        format: "json",
-        ...params,
-      }),
+ * Parâmetros para a listagem de anexos de um recurso.
+ */
+export interface ListAnexosParams {
+  pageNumber?: number;
+  pageSize?: number;
+}
 
-    /**
-     * No description
-     *
-     * @tags Anexos
-     * @name AnexosCreate
-     * @request POST:/api/anexos
-     */
-    anexosCreate: (
-      data: {
-        /** @format binary */
-        arquivo?: File;
-      },
-      query?: {
-        tipoProprietario?: string;
-        /** @format uuid */
-        proprietarioId?: string;
-        descricao?: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<AnexoDtoApiResponse, ObjectApiResponse>({
-        path: `/api/anexos`,
-        method: "POST",
-        query: query,
-        body: data,
-        type: ContentType.FormData,
-        format: "json",
-        ...params,
-      }),
+/**
+ * Busca uma lista paginada de anexos para um recurso específico (ex: contrato, despesa).
+ */
+export const getAnexosByRecurso = (
+  recurso: string,
+  recursoId: string,
+  params: ListAnexosParams
+): Promise<PaginatedApiResponse<AnexoDto[]>> => {
+  return apiClient.getPaginated(`/${recurso}/${recursoId}/anexos`, { params });
+};
 
-    /**
-     * No description
-     *
-     * @tags Anexos
-     * @name AnexosDownloadList
-     * @request GET:/api/anexos/{id}/download
-     */
-    anexosDownloadList: (id: string, params: RequestParams = {}) =>
-      this.request<void, ObjectApiResponse>({
-        path: `/api/anexos/${id}/download`,
-        method: "GET",
-        ...params,
-      }),
+/**
+ * Realiza o upload de um novo anexo.
+ */
+export const createAnexo = ({ arquivo, tipoProprietario, proprietarioId, descricao }: CreateAnexoParams): Promise<ApiResponse<AnexoDto>> => {
+  const formData = new FormData();
+  formData.append('arquivo', arquivo);
 
-    /**
-     * No description
-     *
-     * @tags Anexos
-     * @name AnexosDelete
-     * @request DELETE:/api/anexos/{id}
-     */
-    anexosDelete: (id: string, params: RequestParams = {}) =>
-      this.request<void, ObjectApiResponse>({
-        path: `/api/anexos/${id}`,
-        method: "DELETE",
-        ...params,
-      }),
+  const params = {
+    tipoProprietario,
+    proprietarioId,
+    descricao,
+  };
+
+  return apiClient.post('/anexos', formData, {
+    params,
+    headers: {
+      // Deixar o axios definir o Content-Type para multipart/form-data
+      'Content-Type': undefined,
+    },
+    successMessage: 'Anexo enviado com sucesso.',
+  });
+};
+
+/**
+ * Inicia o download de um anexo.
+ * Abre a URL de download em uma nova janela para o navegador gerenciar.
+ */
+export const downloadAnexo = (id: string): void => {
+  // Acessa a URL base do apiClient para construir a URL completa.
+  const baseUrl = apiClient.baseURL;
+  const url = `${baseUrl}/anexos/${id}/download`;
+  window.open(url, '_blank');
+};
+
+/**
+ * Exclui um anexo pelo seu ID.
+ */
+export const deleteAnexo = (id: string): Promise<ApiResponse<void>> => {
+  return apiClient.delete(`/anexos/${id}`, { successMessage: 'Anexo excluído com sucesso.' });
+};

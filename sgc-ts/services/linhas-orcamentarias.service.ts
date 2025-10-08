@@ -1,120 +1,22 @@
-export interface AtualizarLinhaOrcamentariaDto {
-  /** @minLength 1 */
-  nomeItem: string;
-  descricao?: string | null;
-  /**
-   * @format double
-   * @min 0
-   */
-  quantidade: number;
-  /**
-   * @format double
-   * @min 0
-   */
-  valorUnitario: number;
-  unidadeMedida?: string | null;
-  /** @format uuid */
-  categoriaId: string;
-  /** @format uuid */
-  centroCustoId: string;
-}export interface CriarLinhaOrcamentariaDto {
-  /** @format uuid */
-  orcamentoId: string;
-  /** @minLength 1 */
-  nomeItem: string;
-  descricao?: string | null;
-  /**
-   * @format double
-   * @min 0
-   */
-  quantidade: number;
-  /**
-   * @format double
-   * @min 0
-   */
-  valorUnitario: number;
-  unidadeMedida?: string | null;
-  /** @format uuid */
-  categoriaId: string;
-  /** @format uuid */
-  centroCustoId: string;
-}export interface LinhaOrcamentariaDto {
-  /** @format uuid */
-  id?: string;
-  nomeItem?: string | null;
-  descricao?: string | null;
-  /** @format double */
-  quantidade?: number;
-  /** @format double */
-  valorUnitario?: number;
-  unidadeMedida?: string | null;
-  /** @format double */
-  valorTotal?: number;
-  /** @format uuid */
-  categoriaId?: string;
-  nomeCategoria?: string | null;
-  /** @format uuid */
-  centroCustoId?: string;
-  nomeCentroCusto?: string | null;
-}
+import apiClient from '@/lib/api-client';
+import type { ApiResponse } from '@/lib/types';
+import type { LinhaOrcamentariaDto, CriarLinhaOrcamentariaDto, AtualizarLinhaOrcamentariaDto, } from '@/models/linha-orcamentaria.model';
 
-export interface LinhaOrcamentariaDtoApiResponse {
-  success?: boolean;
-  data?: LinhaOrcamentariaDto;
-  messages?: string[] | null;
-}
+// -----------------
+// Service Functions
+// -----------------
 
-    /**
-     * No description
-     *
-     * @tags LinhasOrcamentarias
-     * @name OrcamentosLinhasCreate
-     * @request POST:/api/orcamentos/{orcamentoId}/linhas
-     */
-    orcamentosLinhasCreate: (
-      orcamentoId: string,
-      data: CriarLinhaOrcamentariaDto,
-      params: RequestParams = {},
-    ) =>
-      this.request<LinhaOrcamentariaDtoApiResponse, ObjectApiResponse>({
-        path: `/api/orcamentos/${orcamentoId}/linhas`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
+/**
+ * Cria uma nova linha orçamentária associada a um orçamento específico.
+ */
+export const createLinhaOrcamentaria = (orcamentoId: string, data: CriarLinhaOrcamentariaDto
 
-    /**
-     * No description
-     *
-     * @tags LinhasOrcamentarias
-     * @name LinhasOrcamentariasUpdate
-     * @request PUT:/api/linhas-orcamentarias/{linhaId}
-     */
-    linhasOrcamentariasUpdate: (
-      linhaId: string,
-      data: AtualizarLinhaOrcamentariaDto,
-      params: RequestParams = {},
-    ) =>
-      this.request<void, ObjectApiResponse>({
-        path: `/api/linhas-orcamentarias/${linhaId}`,
-        method: "PUT",
-        body: data,
-        type: ContentType.Json,
-        ...params,
-      }),
+): Promise<ApiResponse<LinhaOrcamentariaDto>> => { return apiClient.post(`/orcamentos/${orcamentoId}/linhas`, data, { successMessage: 'Linha Orçamentária criada com sucesso.', }); };
 
-    /**
-     * No description
-     *
-     * @tags LinhasOrcamentarias
-     * @name LinhasOrcamentariasDelete
-     * @request DELETE:/api/linhas-orcamentarias/{linhaId}
-     */
-    linhasOrcamentariasDelete: (linhaId: string, params: RequestParams = {}) =>
-      this.request<void, ObjectApiResponse>({
-        path: `/api/linhas-orcamentarias/${linhaId}`,
-        method: "DELETE",
-        ...params,
-      }),
+/*** Atualiza uma linha orçamentária existente.*/
+export const updateLinhaOrcamentaria = (linhaId: string, data: AtualizarLinhaOrcamentariaDto
+
+): Promise<ApiResponse<void>> => { return apiClient.put(`/linhas-orcamentarias/${linhaId}`, data, { successMessage: 'Linha Orçamentária atualizada com sucesso.', }); };
+
+/*** Exclui uma linha orçamentária pelo seu ID.*/
+export const deleteLinhaOrcamentaria = (linhaId: string): Promise<ApiResponse<void>> => { return apiClient.delete(`/linhas-orcamentarias/${linhaId}`, { successMessage: 'Linha Orçamentária excluída com sucesso.', }); }; 

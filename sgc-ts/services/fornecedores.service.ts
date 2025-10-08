@@ -1,159 +1,48 @@
-    export interface AtualizarFornecedorDto {
-      /** @minLength 1 */
-      nome: string;
-      nomeFantasia?: string | null;
-      /** @minLength 1 */
-      cnpj: string;
-      inscricaoEstadual?: string | null;
-      /** @format email */
-      email?: string | null;
-      telefone?: string | null;
-      pessoaContato?: string | null;
-      rua?: string | null;
-      numero?: string | null;
-      complemento?: string | null;
-      bairro?: string | null;
-      cidade?: string | null;
-      estado?: string | null;
-      cep?: string | null;
-    }export interface CriarFornecedorDto {
-      /** @minLength 1 */
-      nome: string;
-      nomeFantasia?: string | null;
-      /** @minLength 1 */
-      cnpj: string;
-      inscricaoEstadual?: string | null;
-      /** @format email */
-      email?: string | null;
-      telefone?: string | null;
-      pessoaContato?: string | null;
-      rua?: string | null;
-      numero?: string | null;
-      complemento?: string | null;
-      bairro?: string | null;
-      cidade?: string | null;
-      estado?: string | null;
-      cep?: string | null;
-    }
-export interface FornecedorDto {
-  /** @format uuid */
-  id?: string;
-  nome?: string | null;
-  nomeFantasia?: string | null;
-  cnpj?: string | null;
-  inscricaoEstadual?: string | null;
-  email?: string | null;
-  telefone?: string | null;
-  pessoaContato?: string | null;
-  rua?: string | null;
-  numero?: string | null;
-  complemento?: string | null;
-  bairro?: string | null;
-  cidade?: string | null;
-  estado?: string | null;
-  cep?: string | null;
-}
+import apiClient from '@/lib/api-client';
+import type { ApiResponse, PaginatedApiResponse } from '@/lib/types';
+import type { FornecedorDto, CriarFornecedorDto, AtualizarFornecedorDto } from '@/models/fornecedor.model';
 
-export interface FornecedorDtoApiResponse {
-  success?: boolean;
-  data?: FornecedorDto;
-  messages?: string[] | null;
-}
+// -----------------
+// Service Functions
+// -----------------
 
-export interface FornecedorDtoListPagedApiResponse {
-  success?: boolean;
-  data?: FornecedorDto[][] | null;
-  messages?: string[] | null;
-  /** @format int32 */
+/** Parâmetros de paginação para listagens. */
+export interface ListParams {
   pageNumber?: number;
-  /** @format int32 */
   pageSize?: number;
-  /** @format int32 */
-  totalPages?: number;
-  /** @format int32 */
-  totalItems?: number;
 }
-    /**
-     * No description
-     *
-     * @tags Fornecedores
-     * @name FornecedoresList
-     * @request GET:/api/fornecedores
-     */
-    fornecedoresList: (
-      query?: {
-        /**
-         * @format int32
-         * @default 1
-         */
-        pageNumber?: number;
-        /**
-         * @format int32
-         * @default 10
-         */
-        pageSize?: number;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<FornecedorDtoListPagedApiResponse, any>({
-        path: `/api/fornecedores`,
-        method: "GET",
-        query: query,
-        format: "json",
-        ...params,
-      }),
 
-    /**
-     * No description
-     *
-     * @tags Fornecedores
-     * @name FornecedoresCreate
-     * @request POST:/api/fornecedores
-     */
-    fornecedoresCreate: (
-      data: CriarFornecedorDto,
-      params: RequestParams = {},
-    ) =>
-      this.request<FornecedorDtoApiResponse, ObjectApiResponse>({
-        path: `/api/fornecedores`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
+/**
+ * Busca uma lista paginada de Fornecedores.
+ */
+export const getFornecedores = (params: ListParams): Promise<PaginatedApiResponse<FornecedorDto[]>> => {
+  return apiClient.getPaginated('/fornecedores', { params });
+};
 
-    /**
-     * No description
-     *
-     * @tags Fornecedores
-     * @name FornecedoresDetail
-     * @request GET:/api/fornecedores/{id}
-     */
-    fornecedoresDetail: (id: string, params: RequestParams = {}) =>
-      this.request<FornecedorDtoApiResponse, ObjectApiResponse>({
-        path: `/api/fornecedores/${id}`,
-        method: "GET",
-        format: "json",
-        ...params,
-      }),
+/**
+ * Busca um Fornecedor pelo seu ID.
+ */
+export const getFornecedorById = (id: string): Promise<ApiResponse<FornecedorDto>> => {
+  return apiClient.get(`/fornecedores/${id}`);
+};
 
-    /**
-     * No description
-     *
-     * @tags Fornecedores
-     * @name FornecedoresUpdate
-     * @request PUT:/api/fornecedores/{id}
-     */
-    fornecedoresUpdate: (
-      id: string,
-      data: AtualizarFornecedorDto,
-      params: RequestParams = {},
-    ) =>
-      this.request<void, ObjectApiResponse>({
-        path: `/api/fornecedores/${id}`,
-        method: "PUT",
-        body: data,
-        type: ContentType.Json,
-        ...params,
-      }),
+/**
+ * Cria um novo Fornecedor.
+ */
+export const createFornecedor = (data: CriarFornecedorDto): Promise<ApiResponse<FornecedorDto>> => {
+  return apiClient.post('/fornecedores', data, { successMessage: 'Fornecedor criado com sucesso.' });
+};
+
+/**
+ * Atualiza um Fornecedor existente.
+ */
+export const updateFornecedor = (id: string, data: AtualizarFornecedorDto): Promise<ApiResponse<void>> => {
+  return apiClient.put(`/fornecedores/${id}`, data, { successMessage: 'Fornecedor atualizado com sucesso.' });
+};
+
+/**
+ * Exclui um Fornecedor pelo seu ID.
+ */
+export const deleteFornecedor = (id: string): Promise<ApiResponse<void>> => {
+  return apiClient.delete(`/fornecedores/${id}`, { successMessage: 'Fornecedor excluído com sucesso.' });
+};

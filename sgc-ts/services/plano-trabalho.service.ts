@@ -1,55 +1,42 @@
+import apiClient from '@/lib/api-client';
+import type { ApiResponse } from '@/lib/types';
+import type { PlanoTrabalhoDto, CriarPlanoTrabalhoDto, AtualizarPlanoTrabalhoDto } from '@/models/plano-trabalho.model';
 
-export interface PlanoTrabalhoDto {
-  /** @format uuid */
-  id?: string;
-  /** @format uuid */
-  contratoId?: string;
-  itens?: ItemPlanoTrabalhoDto[] | null;
-}
+// -----------------
+// Service Functions
+// -----------------
 
-export interface PlanoTrabalhoDtoApiResponse {
-  success?: boolean;
-  data?: PlanoTrabalhoDto;
-  messages?: string[] | null;
-}
+/**
+ * Busca o Plano de Trabalho associado a um contrato específico.
+ */
+export const getPlanoTrabalhoByContratoId = (contratoId: string): Promise<ApiResponse<PlanoTrabalhoDto>> => {
+  return apiClient.get(`/contratos/${contratoId}/plano-trabalho`);
+};
 
-    /**
-     * No description
-     *
-     * @tags PlanosTrabalho
-     * @name ContratosPlanoTrabalhoList
-     * @request GET:/api/contratos/{contratoId}/plano-trabalho
-     */export interface CriarPlanoTrabalhoDto {
-  /** @format uuid */
-  contratoId: string;
-}
-    contratosPlanoTrabalhoList: (
-      contratoId: string,
-      params: RequestParams = {},
-    ) =>
-      this.request<PlanoTrabalhoDtoApiResponse, ObjectApiResponse>({
-        path: `/api/contratos/${contratoId}/plano-trabalho`,
-        method: "GET",
-        format: "json",
-        ...params,
-      }),
+/**
+ * Busca um Plano de Trabalho pelo seu ID.
+ */
+export const getPlanoTrabalhoById = (id: string): Promise<ApiResponse<PlanoTrabalhoDto>> => {
+  return apiClient.get(`/planos-trabalho/${id}`);
+};
 
-    /**
-     * No description
-     *
-     * @tags PlanosTrabalho
-     * @name PlanosTrabalhoCreate
-     * @request POST:/api/planos-trabalho
-     */
-    planosTrabalhoCreate: (
-      data: CriarPlanoTrabalhoDto,
-      params: RequestParams = {},
-    ) =>
-      this.request<PlanoTrabalhoDtoApiResponse, ObjectApiResponse>({
-        path: `/api/planos-trabalho`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
+/**
+ * Cria um novo Plano de Trabalho.
+ */
+export const createPlanoTrabalho = (data: CriarPlanoTrabalhoDto): Promise<ApiResponse<PlanoTrabalhoDto>> => {
+  return apiClient.post('/planos-trabalho', data, { successMessage: 'Plano de Trabalho criado com sucesso.' });
+};
+
+/**
+ * Atualiza um Plano de Trabalho existente.
+ */
+export const updatePlanoTrabalho = (id: string, data: AtualizarPlanoTrabalhoDto): Promise<ApiResponse<void>> => {
+  return apiClient.put(`/planos-trabalho/${id}`, data, { successMessage: 'Plano de Trabalho atualizado com sucesso.' });
+};
+
+/**
+ * Exclui um Plano de Trabalho pelo seu ID.
+ */
+export const deletePlanoTrabalho = (id: string): Promise<ApiResponse<void>> => {
+  return apiClient.delete(`/planos-trabalho/${id}`, { successMessage: 'Plano de Trabalho excluído com sucesso.' });
+};

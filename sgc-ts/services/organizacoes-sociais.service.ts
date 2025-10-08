@@ -1,162 +1,58 @@
-    
-export interface AtualizarOrganizacaoSocialDto {
-  /** @minLength 1 */
-  razaoSocial: string;
-  nomeFantasia?: string | null;
-  /** @minLength 1 */
-  cnpj: string;
-  inscricaoEstadual?: string | null;
-  inscricaoMunicipal?: string | null;
-  telefonePrincipal?: string | null;
-  /** @format email */
-  emailPrincipal?: string | null;
-}
-export interface CriarOrganizacaoSocialDto {
-  /** @minLength 1 */
-  razaoSocial: string;
-  nomeFantasia?: string | null;
-  /** @minLength 1 */
-  cnpj: string;
-  inscricaoEstadual?: string | null;
-  inscricaoMunicipal?: string | null;
-  telefonePrincipal?: string | null;
-  /** @format email */
-  emailPrincipal?: string | null;
-}
+import apiClient from '@/lib/api-client';
+import type { ApiResponse, PaginatedApiResponse } from '@/lib/types';
+import type { OrganizacaoSocialDto, CriarOrganizacaoSocialDto, AtualizarOrganizacaoSocialDto, } from '@/models/organizacao-social.model';
+import type { UnidadeDto, CriarUnidadeDto } from '@/models/unidade.model';
 
+// -----------------
+// Service Functions
+// -----------------
 
-export interface OrganizacaoSocialDto {
-  /** @format uuid */
-  id?: string;
-  razaoSocial?: string | null;
-  nomeFantasia?: string | null;
-  cnpj?: string | null;
-  emailPrincipal?: string | null;
-  unidades?: UnidadeDto[] | null;
-}
-
-export interface OrganizacaoSocialDtoApiResponse {
-  success?: boolean;
-  data?: OrganizacaoSocialDto;
-  messages?: string[] | null;
-}
-
-export interface OrganizacaoSocialDtoListPagedApiResponse {
-  success?: boolean;
-  data?: OrganizacaoSocialDto[][] | null;
-  messages?: string[] | null;
-  /** @format int32 */
+/** Parâmetros de paginação para listagens. */
+export interface ListParams {
   pageNumber?: number;
-  /** @format int32 */
   pageSize?: number;
-  /** @format int32 */
-  totalPages?: number;
-  /** @format int32 */
-  totalItems?: number;
 }
 
 /**
-     * No description
-     *
-     * @tags OrganizacoesSociais
-     * @name OrganizacoesSociaisList
-     * @request GET:/api/organizacoes-sociais
-     */
-    organizacoesSociaisList: (
-      query?: {
-        /**
-         * @format int32
-         * @default 1
-         */
-        pageNumber?: number;
-        /**
-         * @format int32
-         * @default 10
-         */
-        pageSize?: number;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<OrganizacaoSocialDtoListPagedApiResponse, any>({
-        path: `/api/organizacoes-sociais`,
-        method: "GET",
-        query: query,
-        format: "json",
-        ...params,
-      }),
+ * Busca uma lista paginada de Organizações Sociais.
+ */
+export const getOrganizacoesSociais = (params: ListParams): Promise<PaginatedApiResponse<OrganizacaoSocialDto[]>> => {
+  return apiClient.getPaginated('/organizacoes-sociais', { params });
+};
 
-    /**
-     * No description
-     *
-     * @tags OrganizacoesSociais
-     * @name OrganizacoesSociaisCreate
-     * @request POST:/api/organizacoes-sociais
-     */
-    organizacoesSociaisCreate: (
-      data: CriarOrganizacaoSocialDto,
-      params: RequestParams = {},
-    ) =>
-      this.request<OrganizacaoSocialDtoApiResponse, ObjectApiResponse>({
-        path: `/api/organizacoes-sociais`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
+/**
+ * Busca uma Organização Social pelo seu ID.
+ */
+export const getOrganizacaoSocialById = (id: string): Promise<ApiResponse<OrganizacaoSocialDto>> => {
+  return apiClient.get(`/organizacoes-sociais/${id}`);
+};
 
-    /**
-     * No description
-     *
-     * @tags OrganizacoesSociais
-     * @name OrganizacoesSociaisDetail
-     * @request GET:/api/organizacoes-sociais/{id}
-     */
-    organizacoesSociaisDetail: (id: string, params: RequestParams = {}) =>
-      this.request<OrganizacaoSocialDtoApiResponse, ObjectApiResponse>({
-        path: `/api/organizacoes-sociais/${id}`,
-        method: "GET",
-        format: "json",
-        ...params,
-      }),
+/**
+ * Cria uma nova Organização Social.
+ */
+export const createOrganizacaoSocial = (data: CriarOrganizacaoSocialDto): Promise<ApiResponse<OrganizacaoSocialDto>> => {
+  return apiClient.post('/organizacoes-sociais', data, { successMessage: 'Organização Social criada com sucesso.' });
+};
 
-    /**
-     * No description
-     *
-     * @tags OrganizacoesSociais
-     * @name OrganizacoesSociaisUpdate
-     * @request PUT:/api/organizacoes-sociais/{id}
-     */
-    organizacoesSociaisUpdate: (
-      id: string,
-      data: AtualizarOrganizacaoSocialDto,
-      params: RequestParams = {},
-    ) =>
-      this.request<void, ObjectApiResponse>({
-        path: `/api/organizacoes-sociais/${id}`,
-        method: "PUT",
-        body: data,
-        type: ContentType.Json,
-        ...params,
-      }),
+/**
+ * Atualiza uma Organização Social existente.
+ */
+export const updateOrganizacaoSocial = (id: string, data: AtualizarOrganizacaoSocialDto): Promise<ApiResponse<void>> => {
+  return apiClient.put(`/organizacoes-sociais/${id}`, data, { successMessage: 'Organização Social atualizada com sucesso.' });
+};
 
-    /**
-     * No description
-     *
-     * @tags OrganizacoesSociais
-     * @name OrganizacoesSociaisUnitsCreate
-     * @request POST:/api/organizacoes-sociais/{orgId}/units
-     */
-    organizacoesSociaisUnitsCreate: (
-      orgId: string,
-      data: CriarUnidadeDto,
-      params: RequestParams = {},
-    ) =>
-      this.request<UnidadeDtoApiResponse, ObjectApiResponse>({
-        path: `/api/organizacoes-sociais/${orgId}/units`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
+/**
+ * Exclui uma Organização Social pelo seu ID.
+ */
+export const deleteOrganizacaoSocial = (id: string): Promise<ApiResponse<void>> => {
+  return apiClient.delete(`/organizacoes-sociais/${id}`, { successMessage: 'Organização Social excluída com sucesso.' });
+};
+
+// --- Unidades ---
+
+/**
+ * Cria uma nova Unidade para uma Organização Social específica.
+ */
+export const createUnidadeForOrganizacaoSocial = (orgId: string, data: CriarUnidadeDto): Promise<ApiResponse<UnidadeDto>> => {
+  return apiClient.post(`/organizacoes-sociais/${orgId}/units`, data, { successMessage: 'Unidade criada com sucesso.' });
+};
