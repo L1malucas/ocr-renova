@@ -1,29 +1,29 @@
-import axios, { type AxiosInstance, type AxiosRequestConfig, type AxiosResponse, type AxiosError } from 'axios';
+import axios, {
+  type AxiosInstance,
+  type AxiosRequestConfig,
+  type AxiosResponse,
+  type AxiosError,
+  type InternalAxiosRequestConfig,
+} from 'axios';
+import { toast } from '@/components/ui/use-toast';
+import type { ApiResponse, PaginatedApiResponse } from './types';
 
-// Define a standard response format for our client
-export interface ApiResponse<T = any> {
-  success: boolean;
-  data: T | null;
-  message?: string;
+// Custom request config to allow passing extra parameters
+export interface CustomRequestConfig extends AxiosRequestConfig {
+  successMessage?: string;
 }
 
-// Define the configuration for the client
 export interface HttpClientConfig {
   baseURL: string;
   timeout?: number;
   getToken?: () => string | null;
   onUnauthorized?: () => void;
-  onRequest?: (config: AxiosRequestConfig) => void;
-  onSuccess?: (response: AxiosResponse) => void;
-  onError?: (error: AxiosError) => void;
 }
 
 export class HttpClient {
   private readonly instance: AxiosInstance;
-  private readonly config: HttpClientConfig;
 
   constructor(config: HttpClientConfig) {
-    this.config = config;
     this.instance = axios.create({
       baseURL: config.baseURL,
       timeout: config.timeout || 30000,
@@ -32,90 +32,77 @@ export class HttpClient {
       },
     });
 
-    this.setupInterceptors();
+    this.setupInterceptors(config);
   }
 
-  private setupInterceptors(): void {
+  private setupInterceptors(config: HttpClientConfig): void {
     this.instance.interceptors.request.use(
-      (config) => {
-        if (this.config.getToken) {
-          const token = this.config.getToken();
+      (axiosConfig: InternalAxiosRequestConfig) => {
+        if (config.getToken) {
+          const token = config.getToken();
           if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
+            axiosConfig.headers.Authorization = `Bearer ${token}`;
           }
         }
-        this.config.onRequest?.(config);
-        return config;
+        return axiosConfig;
       },
-      (error) => {
-        this.config.onError?.(error as AxiosError);
-        return Promise.reject(error);
-      }
+      (error) => Promise.reject(error)
     );
 
     this.instance.interceptors.response.use(
-      (response) => {
-        this.config.onSuccess?.(response);
+      (response: AxiosResponse<ApiResponse<any> | PaginatedApiResponse<any>>) => {
+        const responseData = response.data;
+        const customConfig = response.config as CustomRequestConfig;
+
+        if (responseData.success) {
+          toast({
+            title: `Sucesso (${response.status})`,
+            description: responseData.messages?.[0] || customConfig.successMessage || 'Operação bem-sucedida.',
+          });
+        }
+
         return response;
       },
-      (error: AxiosError) => {
+      (error: AxiosError<ApiResponse<any>>) => {
         const { response } = error;
-        if (response?.status === 401 && this.config.onUnauthorized) {
-          this.config.onUnauthorized();
+
+        if (response?.status === 401 && config.onUnauthorized) {
+          config.onUnauthorized();
         }
-        this.config.onError?.(error);
+
+        toast({
+          title: `Erro (${response?.status || 'Sem resposta'})`,
+          description: response?.data?.messages?.[0] || error.message || 'Ocorreu um erro inesperado.',
+          variant: 'destructive',
+        });
+
         return Promise.reject(error);
       }
     );
   }
 
-  private async handleRequest<T>(config: AxiosRequestConfig): Promise<ApiResponse<T>> {
-    try {
-      const response = await this.instance.request<T>(config);
-      return {
-        success: true,
-        data: response.data,
-      };
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        let message = 'Erro de conexão com o servidor.';
-        if (error.code === 'ECONNABORTED') {
-          message = 'A requisição excedeu o tempo limite. Por favor, tente novamente.';
-        } else if (error.response) {
-          const responseData = error.response.data as { message?: string; error?: string };
-          message = responseData?.message || responseData?.error || `Erro na requisição: ${error.response.status}`;
-        }
-        return {
-          success: false,
-          data: null,
-          message,
-        };
-      }
-      return {
-        success: false,
-        data: null,
-        message: 'Erro inesperado ao processar a requisição.',
-      };
-    }
+  public async get<T>(url: string, config?: CustomRequestConfig): Promise<ApiResponse<T> | PaginatedApiResponse<T>> {
+    const response = await this.instance.get<ApiResponse<T> | PaginatedApiResponse<T>>(url, config);
+    return response.data;
   }
 
-  public get<T>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
-    return this.handleRequest<T>({ ...config, method: 'GET', url });
+  public async post<T>(url: string, data?: any, config?: CustomRequestConfig): Promise<ApiResponse<T>> {
+    const response = await this.instance.post<ApiResponse<T>>(url, data, config);
+    return response.data;
   }
 
-  public post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
-    return this.handleRequest<T>({ ...config, method: 'POST', url, data });
+  public async put<T>(url: string, data?: any, config?: CustomRequestConfig): Promise<ApiResponse<T>> {
+    const response = await this.instance.put<ApiResponse<T>>(url, data, config);
+    return response.data;
   }
 
-  public put<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
-    return this.handleRequest<T>({ ...config, method: 'PUT', url, data });
+  public async patch<T>(url: string, data?: any, config?: CustomRequestConfig): Promise<ApiResponse<T>> {
+    const response = await this.instance.patch<ApiResponse<T>>(url, data, config);
+    return response.data;
   }
 
-  public patch<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
-    return this.handleRequest<T>({ ...config, method: 'PATCH', url, data });
-  }
-
-  public delete<T>(url: string, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
-    return this.handleRequest<T>({ ...config, method: 'DELETE', url });
+  public async delete<T>(url: string, config?: CustomRequestConfig): Promise<ApiResponse<T>> {
+    const response = await this.instance.delete<ApiResponse<T>>(url, config);
+    return response.data;
   }
 }
