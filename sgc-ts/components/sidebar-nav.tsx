@@ -62,11 +62,6 @@ const navItems = [
     icon: Calculator,
   },
   {
-    title: "Plano de Trabalho",
-    href: "/plano-de-trabalho",
-    icon: Target,
-  },
-  {
     title: "Pagamentos",
     href: "/pagamentos",
     icon: Receipt,

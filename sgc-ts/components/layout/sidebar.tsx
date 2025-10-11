@@ -28,6 +28,8 @@ import {
   ClipboardCheck,
   Briefcase,
   Gavel,
+  Building2,
+  Target,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -42,12 +44,14 @@ const menuGroups = [
       { href: "/pagamentos", label: "Pagamentos", icon: Banknote },
       { href: "/conciliacao", label: "Conciliação", icon: CreditCard },
       { href: "/orcamento", label: "Orçamento", icon: PieChart },
+      { href: "/fornecedores", label: "Fornecedores", icon: Building2 },
     ],
   },
   {
     title: "Prestação de Contas",
     items: [
       { href: "/projetos", label: "Projetos", icon: Briefcase },
+      { href: "/plano-de-trabalho", label: "Plano de Trabalho", icon: Target },
       { href: "/objeto", label: "Objeto", icon: Package },
       { href: "/contrapartida", label: "Contrapartida", icon: GitCompareArrows },
       { href: "/execucao", label: "Execução", icon: Play },
@@ -62,6 +66,7 @@ const menuGroups = [
       { href: "/relatorios", label: "Relatórios", icon: FileText },
       { href: "/integracoes", label: "Integrações", icon: Plug },
       { href: "/usuarios", label: "Usuários", icon: Users },
+      { href: "/unidades", label: "Unidades", icon: Building2 },
       { href: "/configuracoes", label: "Configurações", icon: Settings },
     ],
   },

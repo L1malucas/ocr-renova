@@ -48,12 +48,11 @@ export function DespesasView() {
       <KPIsDashboard onFilterClick={handleFilterClick} activeFilter={activeFilter} />
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="minhas-despesas">Minhas Despesas</TabsTrigger>
           <TabsTrigger value="caixa-entrada">Caixa de Entrada</TabsTrigger>
           <TabsTrigger value="visao-geral">Visão Geral</TabsTrigger>
           <TabsTrigger value="agendamento">Agendamento</TabsTrigger>
-          <TabsTrigger value="fornecedores">Fornecedores</TabsTrigger>
         </TabsList>
 
         <TabsContent value="minhas-despesas" className="mt-6">
@@ -70,10 +69,6 @@ export function DespesasView() {
 
         <TabsContent value="agendamento" className="mt-6">
           <AgendamentoPagamentos />
-        </TabsContent>
-
-        <TabsContent value="fornecedores" className="mt-6">
-          <FornecedoresCategorias />
         </TabsContent>
       </Tabs>
 
