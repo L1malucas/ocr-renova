@@ -1,79 +1,84 @@
-"use client"
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import {
+  getReceitas,
+  getReceitaById,
+  createReceita,
+  updateReceita,
+  deleteReceita,
+  ListParams,
+} from "@/services/receitas.service"
+import { CriarReceitaDto, AtualizarReceitaDto } from "@/models/receita.model"
 
-import { useState, useEffect } from "react"
-import type { Recebimento, FonteRecurso, RateioRecebimento } from "@/lib/types"
-import { mockRecebimentos, mockFontesRecurso } from "@/lib/mock-data"
-import { useAuth } from "./use-auth"
+// Chave principal para as queries de receitas, usada para invalidação
+const RECEITAS_QUERY_KEY = "receitas"
 
-export function useReceitas() {
-  const [recebimentos, setRecebimentos] = useState<Recebimento[]>([])
-  const [fontesRecurso, setFontesRecurso] = useState<FonteRecurso[]>([])
-  const [loading, setLoading] = useState(true)
-  const { user } = useAuth()
+/**
+ * Hook para buscar uma lista paginada de receitas.
+ */
+export const useGetReceitas = (params: ListParams) => {
+  return useQuery({
+    queryKey: [RECEITAS_QUERY_KEY, params],
+    queryFn: () => getReceitas(params),
+    // Mantém os dados anteriores enquanto busca novos, para uma experiência de paginação mais suave
+    keepPreviousData: true,
+  })
+}
 
-  useEffect(() => {
-    if (!user) return
+/**
+ * Hook para buscar uma única receita pelo seu ID.
+ * @param id - O ID da receita a ser buscada.
+ */
+export const useGetReceitaById = (id: string | null) => {
+  return useQuery({
+    queryKey: [RECEITAS_QUERY_KEY, id],
+    queryFn: () => getReceitaById(id!),
+    // A query só será executada se o ID não for nulo
+    enabled: !!id,
+  })
+}
 
-    const timer = setTimeout(() => {
-      setRecebimentos(mockRecebimentos)
-      setFontesRecurso(mockFontesRecurso)
-      setLoading(false)
-    }, 500)
+/**
+ * Hook para criar uma nova receita.
+ */
+export const useCreateReceita = () => {
+  const queryClient = useQueryClient()
 
-    return () => clearTimeout(timer)
-  }, [user])
+  return useMutation({
+    mutationFn: (data: CriarReceitaDto) => createReceita(data),
+    onSuccess: () => {
+      // Invalida todas as queries de lista de receitas para forçar a atualização
+      queryClient.invalidateQueries({ queryKey: [RECEITAS_QUERY_KEY] })
+    },
+  })
+}
 
-  const createRecebimento = async (recebimento: Omit<Recebimento, "id" | "created_at" | "updated_at">) => {
-    if (!user) throw new Error("User not authenticated")
+/**
+ * Hook para atualizar uma receita existente.
+ */
+export const useUpdateReceita = () => {
+  const queryClient = useQueryClient()
 
-    const newRecebimento: Recebimento = {
-      ...recebimento,
-      id: `rec-${Date.now()}`,
-      created_by: user.id,
-      created_at: new Date(),
-      updated_at: new Date(),
-    }
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: AtualizarReceitaDto }) =>
+      updateReceita(id, data),
+    onSuccess: (data, variables) => {
+      // Invalida a lista e também o cache da receita específica que foi alterada
+      queryClient.invalidateQueries({ queryKey: [RECEITAS_QUERY_KEY] })
+      queryClient.invalidateQueries({ queryKey: [RECEITAS_QUERY_KEY, variables.id] })
+    },
+  })
+}
 
-    setRecebimentos((prev) => [newRecebimento, ...prev])
-    return newRecebimento.id
-  }
+/**
+ * Hook para excluir uma receita.
+ */
+export const useDeleteReceita = () => {
+  const queryClient = useQueryClient()
 
-  const updateRecebimento = async (id: string, updates: Partial<Recebimento>) => {
-    setRecebimentos((prev) => prev.map((rec) => (rec.id === id ? { ...rec, ...updates, updated_at: new Date() } : rec)))
-  }
-
-  const deleteRecebimento = async (id: string) => {
-    setRecebimentos((prev) => prev.filter((rec) => rec.id !== id))
-  }
-
-  const createFonteRecurso = async (fonte: Omit<FonteRecurso, "id" | "created_at" | "updated_at">) => {
-    const newFonte: FonteRecurso = {
-      ...fonte,
-      id: `fonte-${Date.now()}`,
-      created_at: new Date(),
-      updated_at: new Date(),
-    }
-
-    setFontesRecurso((prev) => [newFonte, ...prev])
-    return newFonte.id
-  }
-
-  const createRateio = async (rateio: Omit<RateioRecebimento, "id">) => {
-    const newRateio: RateioRecebimento = {
-      ...rateio,
-      id: `rateio-${Date.now()}`,
-    }
-    return newRateio.id
-  }
-
-  return {
-    recebimentos,
-    fontesRecurso,
-    loading,
-    createRecebimento,
-    updateRecebimento,
-    deleteRecebimento,
-    createFonteRecurso,
-    createRateio,
-  }
+  return useMutation({
+    mutationFn: (id: string) => deleteReceita(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [RECEITAS_QUERY_KEY] })
+    },
+  })
 }

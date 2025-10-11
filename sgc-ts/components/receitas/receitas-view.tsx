@@ -3,25 +3,47 @@
 import { useState } from "react"
 import { ReceitasList } from "./receitas-list"
 import { ReceitaForm } from "./receita-form"
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer"
+import { ReceitaDto } from "@/models/receita.model"
 
 export function ReceitasView() {
-  const [currentView, setCurrentView] = useState<"list" | "form">("list")
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [editingReceita, setEditingReceita] = useState<ReceitaDto | null>(null)
 
   const handleCreateNew = () => {
-    setCurrentView("form")
+    setEditingReceita(null)
+    setIsDrawerOpen(true)
   }
 
-  const handleFormCancel = () => {
-    setCurrentView("list")
+  const handleEdit = (receita: ReceitaDto) => {
+    setEditingReceita(receita)
+    setIsDrawerOpen(true)
   }
 
   const handleFormSuccess = () => {
-    setCurrentView("list")
+    setIsDrawerOpen(false)
+    setEditingReceita(null)
   }
 
-  if (currentView === "form") {
-    return <ReceitaForm onCancel={handleFormCancel} onSuccess={handleFormSuccess} />
-  }
+  return (
+    <div className="space-y-6">
+      <ReceitasList onCreateNew={handleCreateNew} onEdit={handleEdit} />
 
-  return <ReceitasList onCreateNew={handleCreateNew} />
+      <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+        <DrawerContent className="max-h-[90vh]">
+          <DrawerHeader>
+            <DrawerTitle>
+              {editingReceita ? "Editar Receita" : "Criar Nova Receita"}
+            </DrawerTitle>
+          </DrawerHeader>
+          <div className="overflow-auto p-4">
+            <ReceitaForm
+              receitaToEdit={editingReceita}
+              onSuccess={handleFormSuccess}
+            />
+          </div>
+        </DrawerContent>
+      </Drawer>
+    </div>
+  )
 }

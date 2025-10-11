@@ -6,6 +6,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { AuthProvider } from "@/components/auth-provider"
 import { Toaster } from "@/components/ui/toaster"
 import { Suspense } from "react"
+import { QueryProvider } from "@/components/query-provider"
 import { AppLayout } from "@/components/layout/app-layout"
 import "./globals.css"
 
@@ -25,8 +26,10 @@ export default function RootLayout({
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
         <Suspense fallback={null}>
           <AuthProvider>
-            <AppLayout>{children}</AppLayout>
-            <Toaster />
+            <QueryProvider>
+              <AppLayout>{children}</AppLayout>
+              <Toaster />
+            </QueryProvider>
           </AuthProvider>
         </Suspense>
         <Analytics />
