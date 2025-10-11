@@ -1,44 +1,44 @@
 "use client"
 
 import { useState } from "react"
-import { UnidadesList } from "./unidades-list"
-import { UnidadeForm } from "./unidade-form"
+import { CentroCustoList } from "./centro-custo-list"
+import { CentroCustoForm } from "./centro-custo-form"
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer"
-import { UnidadeDto } from "@/models/unidade.model"
+import { CentroCustoDto } from "@/models/centro-custo.model"
 
-export function UnidadesView() {
+export function CentroCustoManager() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-  const [editingUnidade, setEditingUnidade] = useState<UnidadeDto | null>(null)
+  const [editingCentroCusto, setEditingCentroCusto] = useState<CentroCustoDto | null>(null)
 
   const handleCreateNew = () => {
-    setEditingUnidade(null)
+    setEditingCentroCusto(null)
     setIsDrawerOpen(true)
   }
 
-  const handleEdit = (unidade: UnidadeDto) => {
-    setEditingUnidade(unidade)
+  const handleEdit = (centroCusto: CentroCustoDto) => {
+    setEditingCentroCusto(centroCusto)
     setIsDrawerOpen(true)
   }
 
   const handleFormSuccess = () => {
     setIsDrawerOpen(false)
-    setEditingUnidade(null)
+    setEditingCentroCusto(null)
   }
 
   return (
     <div className="space-y-6">
-      <UnidadesList onCreateNew={handleCreateNew} onEdit={handleEdit} />
+      <CentroCustoList onCreateNew={handleCreateNew} onEdit={handleEdit} />
 
       <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
         <DrawerContent className="max-h-[90vh]">
           <DrawerHeader>
             <DrawerTitle>
-              {editingUnidade ? "Editar Unidade" : "Criar Nova Unidade"}
+              {editingCentroCusto ? "Editar Centro de Custo" : "Criar Novo Centro de Custo"}
             </DrawerTitle>
           </DrawerHeader>
           <div className="overflow-auto p-4">
-            <UnidadeForm
-              unidadeToEdit={editingUnidade}
+            <CentroCustoForm
+              centroCustoToEdit={editingCentroCusto}
               onSuccess={handleFormSuccess}
             />
           </div>

@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { CreditCard, Building2, AlertTriangle, CheckCircle, Download, Upload, Eye, RefreshCw } from "lucide-react"
+import { CentroCustoManager } from "@/components/centro-custo/centro-custo-manager"
 
 // Mock data for bank accounts and transactions
 const mockAccounts = [

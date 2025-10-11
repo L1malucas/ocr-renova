@@ -25,6 +25,8 @@ import {
   Calculator,
 } from "lucide-react"
 
+import { OrganizacoesView } from "@/components/analise/organizacoes-view"
+
 // Mock data for projects under analysis
 const mockProjectsAnalysis = [
   {
@@ -355,6 +357,7 @@ export default function Analise() {
           <TabsTrigger value="queue">Fila de Análise</TabsTrigger>
           <TabsTrigger value="analysis">Análise Detalhada</TabsTrigger>
           <TabsTrigger value="diligencias">Diligências</TabsTrigger>
+          <TabsTrigger value="organizacoes">Organizações</TabsTrigger>
         </TabsList>
 
         <TabsContent value="queue">
@@ -447,6 +450,10 @@ export default function Analise() {
 
         <TabsContent value="diligencias">
           <DiligenciasManagement />
+        </TabsContent>
+
+        <TabsContent value="organizacoes">
+          <OrganizacoesView />
         </TabsContent>
       </Tabs>
 

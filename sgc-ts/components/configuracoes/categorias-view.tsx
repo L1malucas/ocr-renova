@@ -1,24 +1,7 @@
 "use client"
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-
-// Este será um componente reutilizável para listar, criar, editar e excluir categorias.
-// Por enquanto, é um placeholder.
-function CategoriaManager({ tipo }: { tipo: string }) {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Gerenciar Categorias de {tipo}</CardTitle>
-        <CardDescription>Adicione, edite ou remova categorias para este módulo.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <p>Gerenciador de categorias para {tipo} aparecerá aqui.</p>
-        {/* Aqui entrará a tabela de dados e os botões de ação */}
-      </CardContent>
-    </Card>
-  )
-}
+import { CategoriaManager } from "./categoria-manager"
 
 export function CategoriasView() {
   return (
@@ -36,15 +19,15 @@ export function CategoriasView() {
         </TabsList>
 
         <TabsContent value="despesas">
-          <CategoriaManager tipo="Despesas" />
+          <CategoriaManager tipo="despesas" />
         </TabsContent>
 
         <TabsContent value="linhas-orcamentarias">
-          <CategoriaManager tipo="Linhas Orçamentárias" />
+          <CategoriaManager tipo="linhas-orcamentarias" />
         </TabsContent>
 
         <TabsContent value="centro-custo">
-          <CategoriaManager tipo="Centros de Custo" />
+          <CategoriaManager tipo="centro-custo" />
         </TabsContent>
       </Tabs>
     </div>

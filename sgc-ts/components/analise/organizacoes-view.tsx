@@ -1,44 +1,44 @@
 "use client"
 
 import { useState } from "react"
-import { UnidadesList } from "./unidades-list"
-import { UnidadeForm } from "./unidade-form"
+import { OrganizacoesList } from "./organizacoes-list"
+import { OrganizacaoForm } from "./organizacao-form"
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer"
-import { UnidadeDto } from "@/models/unidade.model"
+import { OrganizacaoSocialDto } from "@/models/organizacao-social.model"
 
-export function UnidadesView() {
+export function OrganizacoesView() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-  const [editingUnidade, setEditingUnidade] = useState<UnidadeDto | null>(null)
+  const [editingOrg, setEditingOrg] = useState<OrganizacaoSocialDto | null>(null)
 
   const handleCreateNew = () => {
-    setEditingUnidade(null)
+    setEditingOrg(null)
     setIsDrawerOpen(true)
   }
 
-  const handleEdit = (unidade: UnidadeDto) => {
-    setEditingUnidade(unidade)
+  const handleEdit = (org: OrganizacaoSocialDto) => {
+    setEditingOrg(org)
     setIsDrawerOpen(true)
   }
 
   const handleFormSuccess = () => {
     setIsDrawerOpen(false)
-    setEditingUnidade(null)
+    setEditingOrg(null)
   }
 
   return (
     <div className="space-y-6">
-      <UnidadesList onCreateNew={handleCreateNew} onEdit={handleEdit} />
+      <OrganizacoesList onCreateNew={handleCreateNew} onEdit={handleEdit} />
 
       <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
         <DrawerContent className="max-h-[90vh]">
           <DrawerHeader>
             <DrawerTitle>
-              {editingUnidade ? "Editar Unidade" : "Criar Nova Unidade"}
+              {editingOrg ? "Editar Organização Social" : "Nova Organização Social"}
             </DrawerTitle>
           </DrawerHeader>
           <div className="overflow-auto p-4">
-            <UnidadeForm
-              unidadeToEdit={editingUnidade}
+            <OrganizacaoForm
+              orgToEdit={editingOrg}
               onSuccess={handleFormSuccess}
             />
           </div>

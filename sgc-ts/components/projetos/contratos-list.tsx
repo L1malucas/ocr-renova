@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Plus, Edit, Trash2 } from "lucide-react"
+import { Plus, Edit, Trash2, Eye } from "lucide-react"
 import { useGetContratos, useDeleteContrato } from "@/hooks/use-contratos"
 import { ContratoDto } from "@/models/contrato.model"
 import {
@@ -21,6 +21,7 @@ import {
 interface ContratosListProps {
   onCreateNew: () => void
   onEdit: (contrato: ContratoDto) => void
+  onViewDetails: (contrato: ContratoDto) => void
 }
 
 export function ContratosList({ onCreateNew, onEdit }: ContratosListProps) {
@@ -83,6 +84,9 @@ export function ContratosList({ onCreateNew, onEdit }: ContratosListProps) {
                   <TableCell>{new Date(contrato.dataFim).toLocaleDateString("pt-BR")}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-2">
+                      <Button variant="ghost" size="sm" onClick={() => onViewDetails(contrato)}>
+                        <Eye className="h-4 w-4" />
+                      </Button>
                       <Button variant="ghost" size="sm" onClick={() => onEdit(contrato)}>
                         <Edit className="h-4 w-4" />
                       </Button>
