@@ -8,22 +8,28 @@ import { AgendamentoPagamentos } from "./agendamento-pagamentos"
 import { FornecedoresCategorias } from "./fornecedores-categorias"
 import { KPIsDashboard } from "./kpis-dashboard"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer"
+import { DespesaDto } from "@/models/despesa.model"
 
 export function DespesasView() {
-  const [currentView, setCurrentView] = useState<"list" | "form">("list")
   const [activeTab, setActiveTab] = useState("minhas-despesas")
   const [activeFilter, setActiveFilter] = useState("todos")
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [editingDespesa, setEditingDespesa] = useState<DespesaDto | null>(null)
 
   const handleCreateNew = () => {
-    setCurrentView("form")
+    setEditingDespesa(null)
+    setIsDrawerOpen(true)
   }
 
-  const handleFormCancel = () => {
-    setCurrentView("list")
+  const handleEdit = (despesa: DespesaDto) => {
+    setEditingDespesa(despesa)
+    setIsDrawerOpen(true)
   }
 
   const handleFormSuccess = () => {
-    setCurrentView("list")
+    setIsDrawerOpen(false)
+    setEditingDespesa(null)
   }
 
   const handleFilterClick = (filter: string) => {
@@ -35,10 +41,6 @@ export function DespesasView() {
     } else {
       setActiveTab("minhas-despesas")
     }
-  }
-
-  if (currentView === "form") {
-    return <DespesaFormAvancado onCancel={handleFormCancel} onSuccess={handleFormSuccess} />
   }
 
   return (
@@ -55,7 +57,7 @@ export function DespesasView() {
         </TabsList>
 
         <TabsContent value="minhas-despesas" className="mt-6">
-          <DespesasList onCreateNew={handleCreateNew} />
+          <DespesasList onCreateNew={handleCreateNew} onEdit={handleEdit} />
         </TabsContent>
 
         <TabsContent value="caixa-entrada" className="mt-6">
@@ -63,7 +65,7 @@ export function DespesasView() {
         </TabsContent>
 
         <TabsContent value="visao-geral" className="mt-6">
-          <DespesasList onCreateNew={handleCreateNew} showAllDespesas={true} />
+          <DespesasList onCreateNew={handleCreateNew} onEdit={handleEdit} showAllDespesas={true} />
         </TabsContent>
 
         <TabsContent value="agendamento" className="mt-6">
@@ -74,6 +76,22 @@ export function DespesasView() {
           <FornecedoresCategorias />
         </TabsContent>
       </Tabs>
+
+      <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+        <DrawerContent className="max-h-[90vh]">
+          <DrawerHeader>
+            <DrawerTitle>
+              {editingDespesa ? "Editar Despesa" : "Criar Nova Despesa"}
+            </DrawerTitle>
+          </DrawerHeader>
+          <div className="overflow-auto p-4">
+            <DespesaFormAvancado
+              despesaToEdit={editingDespesa}
+              onSuccess={handleFormSuccess}
+            />
+          </div>
+        </DrawerContent>
+      </Drawer>
     </div>
   )
 }

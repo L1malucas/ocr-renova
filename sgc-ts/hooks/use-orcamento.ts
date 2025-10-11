@@ -1,113 +1,61 @@
-"use client"
-
-import { useState, useEffect } from "react"
-import type { Orcamento, LinhaOrcamentaria, Projeto, CentroCusto, Categoria } from "@/lib/types"
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import {
-  mockOrcamentos,
-  mockLinhasOrcamentarias,
-  mockProjetos,
-  mockCentrosCusto,
-  mockCategorias,
-} from "@/lib/mock-data"
-import { useAuth } from "./use-auth"
+  getOrcamentoByContratoId,
+  getOrcamentoById,
+  createOrcamento,
+  updateOrcamento,
+  deleteOrcamento,
+} from "@/services/orcamentos.service"
+import { CriarOrcamentoDto, AtualizarOrcamentoDto } from "@/models/orcamento.model"
 
-export function useOrcamento() {
-  const [orcamentos, setOrcamentos] = useState<Orcamento[]>([])
-  const [linhasOrcamentarias, setLinhasOrcamentarias] = useState<LinhaOrcamentaria[]>([])
-  const [projetos, setProjetos] = useState<Projeto[]>([])
-  const [centrosCusto, setCentrosCusto] = useState<CentroCusto[]>([])
-  const [categorias, setCategorias] = useState<Categoria[]>([])
-  const [loading, setLoading] = useState(true)
-  const { user } = useAuth()
+export const ORCAMENTO_QUERY_KEY = "orcamentos"
 
-  useEffect(() => {
-    if (!user) return
+export const useGetOrcamentoByContratoId = (contratoId: string | null) => {
+  return useQuery({
+    queryKey: [ORCAMENTO_QUERY_KEY, "contrato", contratoId],
+    queryFn: () => getOrcamentoByContratoId(contratoId!),
+    enabled: !!contratoId,
+  })
+}
 
-    const timer = setTimeout(() => {
-      setOrcamentos(mockOrcamentos)
-      setLinhasOrcamentarias(mockLinhasOrcamentarias)
-      setProjetos(mockProjetos)
-      setCentrosCusto(mockCentrosCusto)
-      setCategorias(mockCategorias)
-      setLoading(false)
-    }, 500)
+export const useGetOrcamentoById = (id: string | null) => {
+  return useQuery({
+    queryKey: [ORCAMENTO_QUERY_KEY, id],
+    queryFn: () => getOrcamentoById(id!),
+    enabled: !!id,
+  })
+}
 
-    return () => clearTimeout(timer)
-  }, [user])
+export const useCreateOrcamento = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (data: CriarOrcamentoDto) => createOrcamento(data),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: [ORCAMENTO_QUERY_KEY, "contrato", variables.contratoId],
+      })
+    },
+  })
+}
 
-  const createOrcamento = async (orcamento: Omit<Orcamento, "id" | "created_at" | "updated_at">) => {
-    if (!user) throw new Error("User not authenticated")
+export const useUpdateOrcamento = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: AtualizarOrcamentoDto }) =>
+      updateOrcamento(id, data),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: [ORCAMENTO_QUERY_KEY] })
+      queryClient.invalidateQueries({ queryKey: [ORCAMENTO_QUERY_KEY, variables.id] })
+    },
+  })
+}
 
-    const newOrcamento: Orcamento = {
-      ...orcamento,
-      id: `orc-${Date.now()}`,
-      created_by: user.id,
-      created_at: new Date(),
-      updated_at: new Date(),
-    }
-
-    setOrcamentos((prev) => [newOrcamento, ...prev])
-    return newOrcamento.id
-  }
-
-  const updateOrcamento = async (id: string, updates: Partial<Orcamento>) => {
-    setOrcamentos((prev) => prev.map((orc) => (orc.id === id ? { ...orc, ...updates, updated_at: new Date() } : orc)))
-  }
-
-  const deleteOrcamento = async (id: string) => {
-    setOrcamentos((prev) => prev.filter((orc) => orc.id !== id))
-  }
-
-  const createLinhaOrcamentaria = async (linha: Omit<LinhaOrcamentaria, "id">) => {
-    const newLinha: LinhaOrcamentaria = {
-      ...linha,
-      id: `linha-${Date.now()}`,
-    }
-
-    setLinhasOrcamentarias((prev) => [newLinha, ...prev])
-    return newLinha.id
-  }
-
-  const updateLinhaOrcamentaria = async (id: string, updates: Partial<LinhaOrcamentaria>) => {
-    setLinhasOrcamentarias((prev) => prev.map((linha) => (linha.id === id ? { ...linha, ...updates } : linha)))
-  }
-
-  const aprovarOrcamento = async (id: string) => {
-    await updateOrcamento(id, { status: "Aprovado" })
-  }
-
-  const criarRevisao = async (orcamentoId: string) => {
-    const orcamentoOriginal = orcamentos.find((o) => o.id === orcamentoId)
-    if (!orcamentoOriginal) throw new Error("Orçamento não encontrado")
-
-    const novaVersao = orcamentoOriginal.versao + 1
-    const novoOrcamento = {
-      ...orcamentoOriginal,
-      nome: `${orcamentoOriginal.nome} - Revisão ${novaVersao}`,
-      versao: novaVersao,
-      status: "Planejamento" as const,
-    }
-
-    delete (novoOrcamento as any).id
-    delete (novoOrcamento as any).created_at
-    delete (novoOrcamento as any).updated_at
-
-    return await createOrcamento(novoOrcamento)
-  }
-
-  return {
-    orcamentos,
-    linhasOrcamentarias,
-    projetos,
-    centrosCusto,
-    categorias,
-    loading,
-    createOrcamento,
-    updateOrcamento,
-    deleteOrcamento,
-    createLinhaOrcamentaria,
-    updateLinhaOrcamentaria,
-    aprovarOrcamento,
-    criarRevisao,
-  }
+export const useDeleteOrcamento = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (id: string) => deleteOrcamento(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [ORCAMENTO_QUERY_KEY] })
+    },
+  })
 }

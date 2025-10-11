@@ -1,6 +1,89 @@
 "use client"
 
 import { useState } from "react"
+import { useGetOrcamentoByContratoId } from "@/hooks/use-orcamento"
+import { OrcamentoList } from "./orcamento-list"
+import { LinhaOrcamentariaForm } from "./linha-orcamentaria-form"
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer"
+import { Button } from "@/components/ui/button"
+import { PlusCircle } from "lucide-react"
+import { LinhaOrcamentariaDto } from "@/models/linha-orcamentaria.model"
+
+export function OrcamentoView() {
+  // Simula a obtenção do contratoId. Em um app real, isso viria de um seletor global ou da URL.
+  const [contratoId] = useState("contrato-id-placeholder")
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [editingLinha, setEditingLinha] = useState<LinhaOrcamentariaDto | null>(null)
+
+  const { data: orcamentoData, isLoading, isError, error } = useGetOrcamentoByContratoId(contratoId)
+
+  const handleCreateNew = () => {
+    setEditingLinha(null)
+    setIsDrawerOpen(true)
+  }
+
+  const handleEdit = (linha: LinhaOrcamentariaDto) => {
+    setEditingLinha(linha)
+    setIsDrawerOpen(true)
+  }
+
+  const handleFormSuccess = () => {
+    setIsDrawerOpen(false)
+    setEditingLinha(null)
+  }
+
+  if (isLoading) {
+    return <div>Carregando orçamento...</div>
+  }
+
+  if (isError || !orcamentoData?.data) {
+    return <div className="text-red-600">Erro ao carregar orçamento: {error instanceof Error ? error.message : "Erro desconhecido"}</div>
+  }
+
+  const { data: orcamento } = orcamentoData
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Planejamento Orçamentário</h1>
+          <p className="text-muted-foreground">Detalhe as linhas orçamentárias do contrato.</p>
+        </div>
+        <Button onClick={handleCreateNew} className="gap-2">
+          <PlusCircle className="h-4 w-4" />
+          Nova Linha Orçamentária
+        </Button>
+      </div>
+
+      <OrcamentoList 
+        linhas={orcamento.linhasOrcamentarias || []} 
+        onEdit={handleEdit} 
+      />
+
+      <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+        <DrawerContent className="max-h-[90vh]">
+          <DrawerHeader>
+            <DrawerTitle>
+              {editingLinha ? "Editar Linha" : "Criar Nova Linha Orçamentária"}
+            </DrawerTitle>
+          </DrawerHeader>
+          <div className="overflow-auto p-4">
+            <LinhaOrcamentariaForm
+              orcamentoId={orcamento.id}
+              linhaToEdit={editingLinha}
+              onSuccess={handleFormSuccess}
+            />
+          </div>
+        </DrawerContent>
+      </Drawer>
+    </div>
+  )
+}
+
+/*
+"use client"
+
+import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DashboardOrcamentario } from "./dashboard-orcamentario"
@@ -16,7 +99,6 @@ export function OrcamentoView() {
 
   return (
     <div className="space-y-6">
-      {/* Header com KPIs Globais */}
       <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
         <CardHeader>
           <CardTitle className="text-blue-900">Gestão Orçamentária - Centro de Controle</CardTitle>
@@ -44,7 +126,6 @@ export function OrcamentoView() {
         </CardContent>
       </Card>
 
-      {/* Navegação por Abas - Estilo Windows UI 11 */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList className="grid w-full grid-cols-6 bg-white border shadow-sm rounded-lg p-1">
           <TabsTrigger
@@ -118,3 +199,4 @@ export function OrcamentoView() {
     </div>
   )
 }
+*/

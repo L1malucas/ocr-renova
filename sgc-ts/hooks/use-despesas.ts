@@ -1,108 +1,79 @@
-"use client"
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import {
+  getDespesas,
+  getDespesaById,
+  createDespesa,
+  updateDespesa,
+  deleteDespesa,
+  ListParams,
+} from "@/services/despesas.service"
+import { CriarDespesaDto, AtualizarDespesaDto } from "@/models/despesa.model"
 
-import { useState, useEffect } from "react"
-import type { Despesa, Fornecedor, WorkflowAprovacao } from "@/lib/types"
-import { mockDespesas, mockFornecedores, mockWorkflows } from "@/lib/mock-data"
-import { useAuth } from "./use-auth"
+// Chave principal para as queries de despesas
+const DESPESAS_QUERY_KEY = "despesas"
 
-export function useDespesas() {
-  const [despesas, setDespesas] = useState<Despesa[]>([])
-  const [fornecedores, setFornecedores] = useState<Fornecedor[]>([])
-  const [workflows, setWorkflows] = useState<WorkflowAprovacao[]>([])
-  const [despesasPendentes, setDespesasPendentes] = useState<Despesa[]>([])
-  const [loading, setLoading] = useState(true)
-  const { user } = useAuth()
+/**
+ * Hook para buscar uma lista paginada de despesas.
+ */
+export const useGetDespesas = (params: ListParams) => {
+  return useQuery({
+    queryKey: [DESPESAS_QUERY_KEY, params],
+    queryFn: () => getDespesas(params),
+    keepPreviousData: true,
+  })
+}
 
-  useEffect(() => {
-    if (!user) return
+/**
+ * Hook para buscar uma única despesa pelo seu ID.
+ */
+export const useGetDespesaById = (id: string | null) => {
+  return useQuery({
+    queryKey: [DESPESAS_QUERY_KEY, id],
+    queryFn: () => getDespesaById(id!),
+    enabled: !!id,
+  })
+}
 
-    const timer = setTimeout(() => {
-      setDespesas(mockDespesas)
-      setFornecedores(mockFornecedores)
-      setWorkflows(mockWorkflows)
-      setDespesasPendentes(mockDespesas.filter((d) => d.status_aprovacao === "Em Aprovação"))
-      setLoading(false)
-    }, 500)
+/**
+ * Hook para criar uma nova despesa.
+ */
+export const useCreateDespesa = () => {
+  const queryClient = useQueryClient()
 
-    return () => clearTimeout(timer)
-  }, [user])
+  return useMutation({
+    mutationFn: (data: CriarDespesaDto) => createDespesa(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [DESPESAS_QUERY_KEY] })
+    },
+  })
+}
 
-  const createDespesa = async (despesa: Omit<Despesa, "id" | "created_at" | "updated_at">) => {
-    if (!user) throw new Error("User not authenticated")
+/**
+ * Hook para atualizar uma despesa existente.
+ */
+export const useUpdateDespesa = () => {
+  const queryClient = useQueryClient()
 
-    const newDespesa: Despesa = {
-      ...despesa,
-      id: `desp-${Date.now()}`,
-      created_by: user.id,
-      created_at: new Date(),
-      updated_at: new Date(),
-    }
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: AtualizarDespesaDto }) =>
+      updateDespesa(id, data),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: [DESPESAS_QUERY_KEY] })
+      queryClient.invalidateQueries({ queryKey: [DESPESAS_QUERY_KEY, variables.id] })
+    },
+  })
+}
 
-    setDespesas((prev) => [newDespesa, ...prev])
-    return newDespesa.id
-  }
+/**
+ * Hook para excluir uma despesa.
+ */
+export const useDeleteDespesa = () => {
+  const queryClient = useQueryClient()
 
-  const updateDespesa = async (id: string, updates: Partial<Despesa>) => {
-    setDespesas((prev) => prev.map((desp) => (desp.id === id ? { ...desp, ...updates, updated_at: new Date() } : desp)))
-  }
-
-  const deleteDespesa = async (id: string) => {
-    setDespesas((prev) => prev.filter((desp) => desp.id !== id))
-  }
-
-  const aprovarDespesa = async (id: string, observacoes?: string) => {
-    if (!user) throw new Error("User not authenticated")
-
-    const updates = {
-      status_aprovacao: "Aprovado" as const,
-      aprovado_por: user.id,
-      aprovado_em: new Date(),
-      observacoes_aprovacao: observacoes,
-      updated_at: new Date(),
-    }
-
-    setDespesas((prev) => prev.map((desp) => (desp.id === id ? { ...desp, ...updates } : desp)))
-    setDespesasPendentes((prev) => prev.filter((d) => d.id !== id))
-  }
-
-  const rejeitarDespesa = async (id: string, motivo: string) => {
-    if (!user) throw new Error("User not authenticated")
-
-    const updates = {
-      status_aprovacao: "Rejeitado" as const,
-      aprovado_por: user.id,
-      aprovado_em: new Date(),
-      motivo_rejeicao: motivo,
-      updated_at: new Date(),
-    }
-
-    setDespesas((prev) => prev.map((desp) => (desp.id === id ? { ...desp, ...updates } : desp)))
-    setDespesasPendentes((prev) => prev.filter((d) => d.id !== id))
-  }
-
-  const createFornecedor = async (fornecedor: Omit<Fornecedor, "id" | "created_at" | "updated_at">) => {
-    const newFornecedor: Fornecedor = {
-      ...fornecedor,
-      id: `forn-${Date.now()}`,
-      created_at: new Date(),
-      updated_at: new Date(),
-    }
-
-    setFornecedores((prev) => [newFornecedor, ...prev])
-    return newFornecedor.id
-  }
-
-  return {
-    despesas,
-    fornecedores,
-    workflows,
-    despesasPendentes,
-    loading,
-    createDespesa,
-    updateDespesa,
-    deleteDespesa,
-    aprovarDespesa,
-    rejeitarDespesa,
-    createFornecedor,
-  }
+  return useMutation({
+    mutationFn: (id: string) => deleteDespesa(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [DESPESAS_QUERY_KEY] })
+    },
+  })
 }

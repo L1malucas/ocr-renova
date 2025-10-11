@@ -1,5 +1,14 @@
 "use client"
 
+import { ContratosView } from "@/components/projetos/contratos-view"
+
+export default function ProjetosPage() {
+  return <ContratosView />
+}
+
+/*
+"use client"
+
 import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -343,3 +352,4 @@ export default function Projects() {
     </>
   )
 }
+*/
