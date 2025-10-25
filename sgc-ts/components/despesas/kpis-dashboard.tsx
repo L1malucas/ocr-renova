@@ -208,83 +208,83 @@ export function KPIsDashboard({ onFilterClick, activeFilter }: KPIsDashboardProp
 
   return (
     <div className="space-y-6">
-      {/* Alertas Orçamentários para Despesas */}
-      {alertasOrcamentarios.length > 0 && (
-        <Card className="border-orange-200 bg-gradient-to-r from-orange-50 to-amber-50">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="flex items-center gap-2 text-orange-900">
-                <Bell className="h-5 w-5" />
-                Alertas Orçamentários - Impacto em Despesas
-              </CardTitle>
-              <Button variant="outline" size="sm">
-                <TrendingUp className="h-4 w-4 mr-2" />
-                Ver Orçamento
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {alertasOrcamentarios.map((alerta) => (
-                <div
-                  key={alerta.id}
-                  className={`p-3 border-l-4 rounded-r ${
-                    alerta.tipo === "critical" ? "border-red-500 bg-red-50" : "border-amber-500 bg-amber-50"
-                  }`}
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <AlertTriangle
-                          className={`h-4 w-4 ${alerta.tipo === "critical" ? "text-red-600" : "text-amber-600"}`}
-                        />
-                        <p className="font-medium text-sm">{alerta.message}</p>
-                      </div>
-                      <p className="text-xs text-gray-600 mb-1">{alerta.impacto}</p>
-                      <Badge variant="outline" className="text-xs">
-                        {alerta.acao}
-                      </Badge>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      {/* Alertas Orçamentários para Despesas */
+//       {alertasOrcamentarios.length > 0 && (
+//         <Card className="border-orange-200 bg-gradient-to-r from-orange-50 to-amber-50">
+//           <CardHeader>
+//             <div className="flex items-center justify-between">
+//               <CardTitle className="flex items-center gap-2 text-orange-900">
+//                 <Bell className="h-5 w-5" />
+//                 Alertas Orçamentários - Impacto em Despesas
+//               </CardTitle>
+//               <Button variant="outline" size="sm">
+//                 <TrendingUp className="h-4 w-4 mr-2" />
+//                 Ver Orçamento
+//               </Button>
+//             </div>
+//           </CardHeader>
+//           <CardContent>
+//             <div className="space-y-3">
+//               {alertasOrcamentarios.map((alerta) => (
+//                 <div
+//                   key={alerta.id}
+//                   className={`p-3 border-l-4 rounded-r ${
+//                     alerta.tipo === "critical" ? "border-red-500 bg-red-50" : "border-amber-500 bg-amber-50"
+//                   }`}
+//                 >
+//                   <div className="flex items-start justify-between">
+//                     <div className="flex-1">
+//                       <div className="flex items-center gap-2 mb-1">
+//                         <AlertTriangle
+//                           className={`h-4 w-4 ${alerta.tipo === "critical" ? "text-red-600" : "text-amber-600"}`}
+//                         />
+//                         <p className="font-medium text-sm">{alerta.message}</p>
+//                       </div>
+//                       <p className="text-xs text-gray-600 mb-1">{alerta.impacto}</p>
+//                       <Badge variant="outline" className="text-xs">
+//                         {alerta.acao}
+//                       </Badge>
+//                     </div>
+//                   </div>
+//                 </div>
+//               ))}
+//             </div>
+//           </CardContent>
+//         </Card>
+//       )}
 
-      {/* KPIs Dashboard Original */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {kpis.map((kpi) => {
-          const Icon = kpi.icon
-          const isActive = activeFilter === kpi.id
+//       {/* KPIs Dashboard Original */}
+//       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+//         {kpis.map((kpi) => {
+//           const Icon = kpi.icon
+//           const isActive = activeFilter === kpi.id
 
-          return (
-            <Card
-              key={kpi.id}
-              className={`cursor-pointer transition-all duration-200 hover:shadow-md border-2 ${
-                isActive ? "border-blue-500 bg-blue-50" : "border-transparent hover:border-gray-200"
-              }`}
-              onClick={() => onFilterClick(kpi.id)}
-            >
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-gray-600">{kpi.title}</CardTitle>
-                <div className={`p-2 rounded-lg ${kpi.color}`}>
-                  <Icon className="h-4 w-4 text-white" />
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-gray-900">{kpi.value}</div>
-                <p className="text-xs text-gray-500 mt-1">{kpi.description}</p>
-                <Badge variant="secondary" className="mt-2 text-xs">
-                  {kpi.trend}
-                </Badge>
-              </CardContent>
-            </Card>
-          )
-        })}
-      </div>
-    </div>
-  )
-}
-*/
+//           return (
+//             <Card
+//               key={kpi.id}
+//               className={`cursor-pointer transition-all duration-200 hover:shadow-md border-2 ${
+//                 isActive ? "border-blue-500 bg-blue-50" : "border-transparent hover:border-gray-200"
+//               }`}
+//               onClick={() => onFilterClick(kpi.id)}
+//             >
+//               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+//                 <CardTitle className="text-sm font-medium text-gray-600">{kpi.title}</CardTitle>
+//                 <div className={`p-2 rounded-lg ${kpi.color}`}>
+//                   <Icon className="h-4 w-4 text-white" />
+//                 </div>
+//               </CardHeader>
+//               <CardContent>
+//                 <div className="text-2xl font-bold text-gray-900">{kpi.value}</div>
+//                 <p className="text-xs text-gray-500 mt-1">{kpi.description}</p>
+//                 <Badge variant="secondary" className="mt-2 text-xs">
+//                   {kpi.trend}
+//                 </Badge>
+//               </CardContent>
+//             </Card>
+//           )
+//         })}
+//       </div>
+//     </div>
+//   )
+// }
+// */

@@ -7,10 +7,12 @@ import axios, {
 } from 'axios';
 import { toast } from '@/components/ui/use-toast';
 import type { ApiResponse, PaginatedApiResponse } from './types';
+import { AttachmentService } from './attachment-service';
 
 // Custom request config to allow passing extra parameters
 export interface CustomRequestConfig extends AxiosRequestConfig {
   successMessage?: string;
+  attachments?: File[];
 }
 
 export interface HttpClientConfig {
@@ -23,6 +25,7 @@ export interface HttpClientConfig {
 export class HttpClient {
   public readonly baseURL: string;
   private readonly instance: AxiosInstance;
+  private readonly attachmentService: AttachmentService;
 
   constructor(config: HttpClientConfig) {
     this.baseURL = config.baseURL;
@@ -33,6 +36,7 @@ export class HttpClient {
         'Content-Type': 'application/json',
       },
     });
+    this.attachmentService = new AttachmentService(this.instance);
 
     this.setupInterceptors(config);
   }
@@ -94,16 +98,25 @@ export class HttpClient {
   }
 
   public async post<T>(url: string, data?: any, config?: CustomRequestConfig): Promise<ApiResponse<T>> {
+    if (config?.attachments) {
+      return this.attachmentService.post<T>(url, data, config);
+    }
     const response = await this.instance.post<ApiResponse<T>>(url, data, config);
     return response.data;
   }
 
   public async put<T>(url: string, data?: any, config?: CustomRequestConfig): Promise<ApiResponse<T>> {
+    if (config?.attachments) {
+      return this.attachmentService.put<T>(url, data, config);
+    }
     const response = await this.instance.put<ApiResponse<T>>(url, data, config);
     return response.data;
   }
 
   public async patch<T>(url: string, data?: any, config?: CustomRequestConfig): Promise<ApiResponse<T>> {
+    if (config?.attachments) {
+      return this.attachmentService.patch<T>(url, data, config);
+    }
     const response = await this.instance.patch<ApiResponse<T>>(url, data, config);
     return response.data;
   }

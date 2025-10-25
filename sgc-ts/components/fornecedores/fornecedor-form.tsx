@@ -10,12 +10,29 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useCreateFornecedor, useUpdateFornecedor } from "@/hooks/use-fornecedores"
 import { FornecedorDto } from "@/models/fornecedor.model"
 import { useToast } from "@/components/ui/use-toast"
+import { FileUpload } from "@/components/ui/file-upload"
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ALLOWED_FILE_TYPES = [
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.ms-excel",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "application/pdf",
+];
 
 const formSchema = z.object({
   nome: z.string().min(3, "O nome é obrigatório."),
   documento: z.string().min(11, "O documento (CNPJ/CPF) é obrigatório."),
   contato: z.string().optional(),
-})
+  attachment: z.any()
+    .refine((file) => file, "O anexo é obrigatório.")
+    .refine((file) => file?.size <= MAX_FILE_SIZE, `O tamanho máximo do arquivo é 5MB.`)
+    .refine(
+      (file) => ALLOWED_FILE_TYPES.includes(file?.type),
+      "Tipos de arquivo permitidos: .doc, .docx, .xls, .xlsx, .pdf"
+    ),
+});
 
 type FormValues = z.infer<typeof formSchema>
 
@@ -87,6 +104,21 @@ export function FornecedorForm({ fornecedorToEdit, onSuccess }: FornecedorFormPr
             <FormMessage />
           </FormItem>
         )} />
+        <FormField
+          control={form.control}
+          name="attachment"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <FileUpload
+                  onFileChange={(file) => field.onChange(file)}
+                  accept=".doc,.docx,.xls,.xlsx,.pdf"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <div className="flex justify-end gap-4">
           <Button type="button" variant="outline" onClick={onSuccess}>Cancelar</Button>
           <Button type="submit" disabled={isLoading}>{isLoading ? "Salvando..." : "Salvar"}</Button>

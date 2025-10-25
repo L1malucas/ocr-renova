@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useSearchParams } from "next/navigation"
 import { useGetOrcamentoByContratoId } from "@/hooks/use-orcamento"
 import { OrcamentoList } from "./orcamento-list"
 import { LinhaOrcamentariaForm } from "./linha-orcamentaria-form"
@@ -10,8 +11,8 @@ import { PlusCircle } from "lucide-react"
 import { LinhaOrcamentariaDto } from "@/models/linha-orcamentaria.model"
 
 export function OrcamentoView() {
-  // Simula a obtenção do contratoId. Em um app real, isso viria de um seletor global ou da URL.
-  const [contratoId] = useState("contrato-id-placeholder")
+  const searchParams = useSearchParams()
+  const contratoId = searchParams.get("contratoId")
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [editingLinha, setEditingLinha] = useState<LinhaOrcamentariaDto | null>(null)
 
@@ -32,12 +33,16 @@ export function OrcamentoView() {
     setEditingLinha(null)
   }
 
+  if (!contratoId) {
+    return <div>Selecione um contrato para ver o orçamento.</div>
+  }
+
   if (isLoading) {
     return <div>Carregando orçamento...</div>
   }
 
   if (isError || !orcamentoData?.data) {
-    return <div className="text-red-600">Erro ao carregar orçamento: {error instanceof Error ? error.message : "Erro desconhecido"}</div>
+    return <div className="text-red-600">Erro ao carregar orçamento: {error instanceof Error ? error.message : "Orçamento não encontrado ou erro na API."}</div>
   }
 
   const { data: orcamento } = orcamentoData

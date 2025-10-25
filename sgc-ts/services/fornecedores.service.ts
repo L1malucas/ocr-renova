@@ -30,7 +30,11 @@ export const getFornecedorById = (id: string): Promise<ApiResponse<FornecedorDto
  * Cria um novo Fornecedor.
  */
 export const createFornecedor = (data: CriarFornecedorDto): Promise<ApiResponse<FornecedorDto>> => {
-  return apiClient.post('/fornecedores', data, { successMessage: 'Fornecedor criado com sucesso.' });
+  const { attachment, ...rest } = data;
+  return apiClient.post('/fornecedores', rest, {
+    attachments: attachment ? [attachment] : [],
+    successMessage: 'Fornecedor criado com sucesso.',
+  });
 };
 
 /**

@@ -37,6 +37,7 @@ export interface CriarFornecedorDto {
   cidade?: string | null;
   estado?: string | null;
   cep?: string | null;
+  attachment?: File;
 }
 
 /**

@@ -28,22 +28,9 @@ export const getAnexosByRecurso = (
 /**
  * Realiza o upload de um novo anexo.
  */
-export const createAnexo = ({ arquivo, tipoProprietario, proprietarioId, descricao }: CreateAnexoParams): Promise<ApiResponse<AnexoDto>> => {
-  const formData = new FormData();
-  formData.append('arquivo', arquivo);
-
-  const params = {
-    tipoProprietario,
-    proprietarioId,
-    descricao,
-  };
-
-  return apiClient.post('/anexos', formData, {
-    params,
-    headers: {
-      // Deixar o axios definir o Content-Type para multipart/form-data
-      'Content-Type': undefined,
-    },
+export const createAnexo = ({ arquivo, ...data }: CreateAnexoParams): Promise<ApiResponse<AnexoDto>> => {
+  return apiClient.post('/anexos', data, {
+    attachments: [arquivo],
     successMessage: 'Anexo enviado com sucesso.',
   });
 };
