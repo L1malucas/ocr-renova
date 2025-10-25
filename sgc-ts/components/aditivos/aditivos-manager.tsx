@@ -3,18 +3,22 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Table, TableBody, TableHeader } from "@/components/ui/table"
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer"
-import { PlusCircle, Edit } from "lucide-react"
-import { useGetAditivosByContrato } from "@/hooks/use-aditivos"
-import { AditivoDto } from "@/models/aditivo.model"
+import { PlusCircle } from "lucide-react"
+import { useGetAditivosByContrato, useDeleteAditivo } from "@/hooks/use-aditivos"
+import { AditivoDto, AditivoListSchema } from "@/models/aditivo.model"
 import { AditivoForm } from "./aditivo-form"
+import { generateTableColumns, generateTableCells } from "@/lib/table-generator"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
 
 export function AditivosManager({ contratoId }: { contratoId: string }) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [editingAditivo, setEditingAditivo] = useState<AditivoDto | null>(null)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
 
   const { data, isLoading } = useGetAditivosByContrato(contratoId, { pageNumber: 1, pageSize: 10 })
+  const deleteMutation = useDeleteAditivo()
   const aditivos = data?.data ?? []
 
   const handleCreateNew = () => {
@@ -25,6 +29,12 @@ export function AditivosManager({ contratoId }: { contratoId: string }) {
   const handleEdit = (aditivo: AditivoDto) => {
     setEditingAditivo(aditivo)
     setIsDrawerOpen(true)
+  }
+
+  const handleDelete = () => {
+    if (deletingId) {
+      deleteMutation.mutate(deletingId, { onSuccess: () => setDeletingId(null) })
+    }
   }
 
   const handleFormSuccess = () => {
@@ -49,18 +59,9 @@ export function AditivosManager({ contratoId }: { contratoId: string }) {
           <p>Carregando aditivos...</p>
         ) : (
           <Table>
-            <TableHeader><TableRow><TableHead>Tipo</TableHead><TableHead>Justificativa</TableHead><TableHead>Valor</TableHead><TableHead className="text-right">Ações</TableHead></TableRow></TableHeader>
+            <TableHeader>{generateTableColumns(AditivoListSchema)}</TableHeader>
             <TableBody>
-              {aditivos.map(aditivo => (
-                <TableRow key={aditivo.id}>
-                  <TableCell>{aditivo.tipo}</TableCell>
-                  <TableCell>{aditivo.justificativa}</TableCell>
-                  <TableCell>{aditivo.valor?.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</TableCell>
-                  <TableCell className="text-right">
-                    <Button variant="ghost" size="sm" onClick={() => handleEdit(aditivo)}><Edit className="h-4 w-4" /></Button>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {generateTableCells(AditivoListSchema, aditivos, handleEdit, (id) => setDeletingId(id))}
             </TableBody>
           </Table>
         )}
@@ -72,6 +73,21 @@ export function AditivosManager({ contratoId }: { contratoId: string }) {
           <AditivoForm contratoId={contratoId} aditivoToEdit={editingAditivo} onSuccess={handleFormSuccess} />
         </DrawerContent>
       </Drawer>
+
+      <AlertDialog open={!!deletingId} onOpenChange={() => setDeletingId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
+            <AlertDialogDescription>Tem certeza que deseja excluir este aditivo?</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete} disabled={deleteMutation.isLoading}>
+              {deleteMutation.isLoading ? "Excluindo..." : "Excluir"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   )
 }

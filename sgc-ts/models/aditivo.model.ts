@@ -1,3 +1,5 @@
+import * as z from 'zod';
+
 /**
  * Enum para os tipos de aditivo.
  * OBS: Os nomes dos membros (Value0, Value1) foram gerados automaticamente.
@@ -46,3 +48,28 @@ export interface UpdateAmendmentDto {
   objeto: string;
   newEndTerm?: string | null;
 }
+
+export const CriarAditivoSchema = z.object({
+  numeroTermo: z.string().min(1, "O número do termo é obrigatório."),
+  objeto: z.string().min(3, "O objeto é obrigatório."),
+  tipo: z.nativeEnum(AditivoType),
+  valorAlteracao: z.number().optional(),
+  dataAssinatura: z.string().optional(),
+  novoFimVigencia: z.string().optional(),
+  contratoId: z.string(),
+});
+
+export interface AditivoListDto {
+  id: string;
+  numeroTermo: string | null;
+  tipo: string | null;
+  valorAlteracao: number;
+  status: string | null;
+}
+
+export const AditivoListSchema = z.object({
+  numeroTermo: z.string(),
+  tipo: z.string(),
+  valorAlteracao: z.number(),
+  status: z.string(),
+});

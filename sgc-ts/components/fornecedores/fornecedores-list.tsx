@@ -3,11 +3,12 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Plus, Edit, Trash2 } from "lucide-react"
+import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table"
+import { Plus } from "lucide-react"
 import { useGetFornecedores, useDeleteFornecedor } from "@/hooks/use-fornecedores"
-import { FornecedorDto } from "@/models/fornecedor.model"
+import { FornecedorDto, FornecedorListSchema } from "@/models/fornecedor.model"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
+import { generateTableColumns, generateTableCells } from "@/lib/table-generator"
 
 interface FornecedoresListProps {
   onCreateNew: () => void
@@ -47,12 +48,7 @@ export function FornecedoresList({ onCreateNew, onEdit }: FornecedoresListProps)
         <CardContent className="p-0">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Nome</TableHead>
-                <TableHead>CNPJ/CPF</TableHead>
-                <TableHead>Contato</TableHead>
-                <TableHead className="text-right">Ações</TableHead>
-              </TableRow>
+              {generateTableColumns(FornecedorListSchema)}
             </TableHeader>
             <TableBody>
               {isLoading && (
@@ -61,19 +57,7 @@ export function FornecedoresList({ onCreateNew, onEdit }: FornecedoresListProps)
               {isError && (
                 <TableRow><TableCell colSpan={4} className="text-center py-8 text-red-600">Erro: {error.message}</TableCell></TableRow>
               )}
-              {fornecedores.map((fornecedor) => (
-                <TableRow key={fornecedor.id}>
-                  <TableCell className="font-medium">{fornecedor.nome}</TableCell>
-                  <TableCell>{fornecedor.documento}</TableCell>
-                  <TableCell>{fornecedor.contato}</TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <Button variant="ghost" size="sm" onClick={() => onEdit(fornecedor)}><Edit className="h-4 w-4" /></Button>
-                      <Button variant="ghost" size="sm" onClick={() => setDeletingId(fornecedor.id)} disabled={deleteMutation.isLoading}><Trash2 className="h-4 w-4" /></Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {generateTableCells(FornecedorListSchema, fornecedores, onEdit, (id) => setDeletingId(id))}
             </TableBody>
           </Table>
         </CardContent>
