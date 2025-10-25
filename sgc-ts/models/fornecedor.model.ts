@@ -50,12 +50,14 @@ export interface FornecedorListDto {
   nome: string | null;
   cnpj: string | null;
   inscricaoEstadual: string | null;
+  email?: string | null;
 }
 
 export const FornecedorListSchema = z.object({
   nome: z.string(),
   cnpj: z.string(),
   inscricaoEstadual: z.string(),
+  email: z.string().email()
 });
 
 export const CriarFornecedorSchema = z.object({

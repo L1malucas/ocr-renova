@@ -1,12 +1,10 @@
-"use client"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Table, TableBody, TableHeader, TableRow, TableCell } from "@/components/ui/table"
 import { Plus, Eye } from "lucide-react"
-import { useGetContratos, useDeleteContrato } from "@/hooks/use-contratos"
-import { ContratoDto, ContratoListSchema } from "@/models/contrato.model"
+import { useGetPlanoTrabalhoByContratoId, useDeletePlanoTrabalho } from "@/hooks/use-plano-de-trabalho"
+import { PlanoTrabalhoDto, PlanoTrabalhoListSchema } from "@/models/plano-trabalho.model"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,21 +17,19 @@ import {
 } from "@/components/ui/alert-dialog"
 import { generateTableColumns, generateTableCells } from "@/lib/table-generator"
 
-interface ContratosListProps {
+interface PlanosTrabalhoListProps {
   onCreateNew: () => void
-  onEdit: (contrato: ContratoDto) => void
-  onViewDetails: (contrato: ContratoDto) => void
+  onEdit: (planoTrabalho: PlanoTrabalhoDto) => void
+  contratoId: string
 }
 
-export function ContratosList({ onCreateNew, onEdit, onViewDetails }: ContratosListProps) {
-  const [page, setPage] = useState(1)
+export function PlanosTrabalhoList({ onCreateNew, onEdit, contratoId }: PlanosTrabalhoListProps) {
   const [deletingId, setDeletingId] = useState<string | null>(null)
 
-  const { data, isLoading, isError, error } = useGetContratos({ pageNumber: page, pageSize: 10 })
-  const deleteMutation = useDeleteContrato()
+  const { data, isLoading, isError, error } = useGetPlanoTrabalhoByContratoId(contratoId)
+  const deleteMutation = useDeletePlanoTrabalho()
 
-  const contratos = data?.data ?? []
-  const meta = data?.meta
+  const planosTrabalho = data?.data ? [data.data] : [] // Assuming one plano de trabalho per contract
 
   const handleDelete = () => {
     if (deletingId) {
@@ -47,12 +43,12 @@ export function ContratosList({ onCreateNew, onEdit, onViewDetails }: ContratosL
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Gestão de Contratos</h1>
-          <p className="text-muted-foreground">Gerencie os contratos e projetos.</p>
+          <h1 className="text-3xl font-bold">Gestão de Planos de Trabalho</h1>
+          <p className="text-muted-foreground">Gerencie os planos de trabalho do contrato.</p>
         </div>
         <Button onClick={onCreateNew} className="gap-2">
           <Plus className="h-4 w-4" />
-          Novo Contrato
+          Novo Plano de Trabalho
         </Button>
       </div>
 
@@ -60,7 +56,7 @@ export function ContratosList({ onCreateNew, onEdit, onViewDetails }: ContratosL
         <CardContent className="p-0">
           <Table>
             <TableHeader>
-              {generateTableColumns(ContratoListSchema)}
+              {generateTableColumns(PlanoTrabalhoListSchema)}
             </TableHeader>
             <TableBody>
               {isLoading && (
@@ -69,25 +65,17 @@ export function ContratosList({ onCreateNew, onEdit, onViewDetails }: ContratosL
               {isError && (
                 <TableRow><TableCell colSpan={6} className="text-center py-8 text-red-600">Erro: {error.message}</TableCell></TableRow>
               )}
-              {generateTableCells(ContratoListSchema, contratos, onEdit, (id) => setDeletingId(id))}
+              {generateTableCells(PlanoTrabalhoListSchema, planosTrabalho, onEdit, (id) => setDeletingId(id))}
             </TableBody>
           </Table>
         </CardContent>
       </Card>
 
-      {meta && (
-        <div className="flex justify-end items-center gap-4">
-          <span className="text-sm text-muted-foreground">Página {meta.currentPage} de {meta.totalPages}</span>
-          <Button onClick={() => setPage(p => p - 1)} disabled={!meta.hasPreviousPage}>Anterior</Button>
-          <Button onClick={() => setPage(p => p + 1)} disabled={!meta.hasNextPage}>Próxima</Button>
-        </div>
-      )}
-
       <AlertDialog open={!!deletingId} onOpenChange={() => setDeletingId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
-            <AlertDialogDescription>Tem certeza que deseja excluir este contrato? Esta ação não pode ser desfeita.</AlertDialogDescription>
+            <AlertDialogDescription>Tem certeza que deseja excluir este plano de trabalho? Esta ação não pode ser desfeita.</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>

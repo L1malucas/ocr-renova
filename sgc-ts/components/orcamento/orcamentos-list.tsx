@@ -1,12 +1,10 @@
-"use client"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Table, TableBody, TableHeader, TableRow, TableCell } from "@/components/ui/table"
 import { Plus, Eye } from "lucide-react"
-import { useGetContratos, useDeleteContrato } from "@/hooks/use-contratos"
-import { ContratoDto, ContratoListSchema } from "@/models/contrato.model"
+import { useGetOrcamentoByContratoId, useDeleteOrcamento } from "@/hooks/use-orcamento"
+import { OrcamentoDto, OrcamentoListSchema } from "@/models/orcamento.model"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,21 +17,19 @@ import {
 } from "@/components/ui/alert-dialog"
 import { generateTableColumns, generateTableCells } from "@/lib/table-generator"
 
-interface ContratosListProps {
+interface OrcamentosListProps {
   onCreateNew: () => void
-  onEdit: (contrato: ContratoDto) => void
-  onViewDetails: (contrato: ContratoDto) => void
+  onEdit: (orcamento: OrcamentoDto) => void
+  contratoId: string
 }
 
-export function ContratosList({ onCreateNew, onEdit, onViewDetails }: ContratosListProps) {
-  const [page, setPage] = useState(1)
+export function OrcamentosList({ onCreateNew, onEdit, contratoId }: OrcamentosListProps) {
   const [deletingId, setDeletingId] = useState<string | null>(null)
 
-  const { data, isLoading, isError, error } = useGetContratos({ pageNumber: page, pageSize: 10 })
-  const deleteMutation = useDeleteContrato()
+  const { data, isLoading, isError, error } = useGetOrcamentoByContratoId(contratoId)
+  const deleteMutation = useDeleteOrcamento()
 
-  const contratos = data?.data ?? []
-  const meta = data?.meta
+  const orcamentos = data?.data ? [data.data] : [] // Assuming one budget per contract
 
   const handleDelete = () => {
     if (deletingId) {
@@ -47,12 +43,12 @@ export function ContratosList({ onCreateNew, onEdit, onViewDetails }: ContratosL
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Gestão de Contratos</h1>
-          <p className="text-muted-foreground">Gerencie os contratos e projetos.</p>
+          <h1 className="text-3xl font-bold">Gestão de Orçamentos</h1>
+          <p className="text-muted-foreground">Gerencie os orçamentos do contrato.</p>
         </div>
         <Button onClick={onCreateNew} className="gap-2">
           <Plus className="h-4 w-4" />
-          Novo Contrato
+          Novo Orçamento
         </Button>
       </div>
 
@@ -60,7 +56,7 @@ export function ContratosList({ onCreateNew, onEdit, onViewDetails }: ContratosL
         <CardContent className="p-0">
           <Table>
             <TableHeader>
-              {generateTableColumns(ContratoListSchema)}
+              {generateTableColumns(OrcamentoListSchema)}
             </TableHeader>
             <TableBody>
               {isLoading && (
@@ -69,25 +65,17 @@ export function ContratosList({ onCreateNew, onEdit, onViewDetails }: ContratosL
               {isError && (
                 <TableRow><TableCell colSpan={6} className="text-center py-8 text-red-600">Erro: {error.message}</TableCell></TableRow>
               )}
-              {generateTableCells(ContratoListSchema, contratos, onEdit, (id) => setDeletingId(id))}
+              {generateTableCells(OrcamentoListSchema, orcamentos, onEdit, (id) => setDeletingId(id))}
             </TableBody>
           </Table>
         </CardContent>
       </Card>
 
-      {meta && (
-        <div className="flex justify-end items-center gap-4">
-          <span className="text-sm text-muted-foreground">Página {meta.currentPage} de {meta.totalPages}</span>
-          <Button onClick={() => setPage(p => p - 1)} disabled={!meta.hasPreviousPage}>Anterior</Button>
-          <Button onClick={() => setPage(p => p + 1)} disabled={!meta.hasNextPage}>Próxima</Button>
-        </div>
-      )}
-
       <AlertDialog open={!!deletingId} onOpenChange={() => setDeletingId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
-            <AlertDialogDescription>Tem certeza que deseja excluir este contrato? Esta ação não pode ser desfeita.</AlertDialogDescription>
+            <AlertDialogDescription>Tem certeza que deseja excluir este orçamento? Esta ação não pode ser desfeita.</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>

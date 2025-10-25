@@ -1,3 +1,4 @@
+import * as z from 'zod';
 import type { ItemPlanoTrabalhoDto } from './item-plano-trabalho.model';
 
 /**
@@ -22,3 +23,16 @@ export interface CriarPlanoTrabalhoDto {
  * Pode necessitar de ajustes dependendo da implementação da API.
  */
 export type AtualizarPlanoTrabalhoDto = Partial<CriarPlanoTrabalhoDto>;
+
+export const CriarPlanoTrabalhoSchema = z.object({
+  contratoId: z.string().min(1, "O ID do contrato é obrigatório."),
+});
+
+export interface PlanoTrabalhoListDto {
+  id: string;
+  contratoId: string;
+}
+
+export const PlanoTrabalhoListSchema = z.object({
+  contratoId: z.string(),
+});

@@ -3,10 +3,12 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Plus, Edit } from "lucide-react"
-import { useGetCentrosCusto } from "@/hooks/use-centro-custo"
-import { CentroCustoDto } from "@/models/centro-custo.model"
+import { Table, TableBody, TableHeader } from "@/components/ui/table"
+import { Plus } from "lucide-react"
+import { useGetCentrosCusto, useDeleteCentroCusto } from "@/hooks/use-centro-custo"
+import { CentroCustoDto, CentroCustoListSchema } from "@/models/centro-custo.model"
+import { generateTableColumns, generateTableCells } from "@/lib/table-generator"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
 
 interface CentroCustoListProps {
   onCreateNew: () => void
@@ -15,11 +17,19 @@ interface CentroCustoListProps {
 
 export function CentroCustoList({ onCreateNew, onEdit }: CentroCustoListProps) {
   const [page, setPage] = useState(1)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
 
   const { data, isLoading, isError, error } = useGetCentrosCusto({ pageNumber: page, pageSize: 10 })
+  const deleteMutation = useDeleteCentroCusto()
 
   const centrosCusto = data?.data ?? []
   const meta = data?.meta
+
+  const handleDelete = () => {
+    if (deletingId) {
+      deleteMutation.mutate(deletingId, { onSuccess: () => setDeletingId(null) })
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -34,29 +44,15 @@ export function CentroCustoList({ onCreateNew, onEdit }: CentroCustoListProps) {
       <Card>
         <CardContent className="p-0">
           <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Nome</TableHead>
-                <TableHead>Código</TableHead>
-                <TableHead className="text-right">Ações</TableHead>
-              </TableRow>
-            </TableHeader>
+            <TableHeader>{generateTableColumns(CentroCustoListSchema)}</TableHeader>
             <TableBody>
               {isLoading && (
-                <TableRow><TableCell colSpan={3} className="text-center py-8">Carregando...</TableCell></TableRow>
+                <TableRow><TableCell colSpan={4} className="text-center py-8">Carregando...</TableCell></TableRow>
               )}
               {isError && (
-                <TableRow><TableCell colSpan={3} className="text-center py-8 text-red-600">Erro: {error.message}</TableCell></TableRow>
+                <TableRow><TableCell colSpan={4} className="text-center py-8 text-red-600">Erro: {error.message}</TableCell></TableRow>
               )}
-              {centrosCusto.map((centro) => (
-                <TableRow key={centro.id}>
-                  <TableCell className="font-medium">{centro.nome}</TableCell>
-                  <TableCell>{centro.codigo}</TableCell>
-                  <TableCell className="text-right">
-                    <Button variant="ghost" size="sm" onClick={() => onEdit(centro)}><Edit className="h-4 w-4" /></Button>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {generateTableCells(CentroCustoListSchema, centrosCusto, onEdit, (id) => setDeletingId(id))}
             </TableBody>
           </Table>
         </CardContent>
@@ -69,6 +65,21 @@ export function CentroCustoList({ onCreateNew, onEdit }: CentroCustoListProps) {
           <Button onClick={() => setPage(p => p + 1)} disabled={!meta.hasNextPage}>Próxima</Button>
         </div>
       )}
+
+      <AlertDialog open={!!deletingId} onOpenChange={() => setDeletingId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
+            <AlertDialogDescription>Tem certeza que deseja excluir este centro de custo?</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete} disabled={deleteMutation.isLoading}>
+              {deleteMutation.isLoading ? "Excluindo..." : "Excluir"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

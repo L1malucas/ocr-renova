@@ -3,11 +3,12 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Plus, Edit, Trash2 } from "lucide-react"
+import { Table, TableBody, TableHeader, TableRow, TableCell } from "@/components/ui/table"
+import { Plus } from "lucide-react"
 import { useGetUnidades, useDeleteUnidade } from "@/hooks/use-unidades"
-import { UnidadeDto } from "@/models/unidade.model"
+import { UnidadeDto, UnidadeListSchema } from "@/models/unidade.model"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
+import { generateTableColumns, generateTableCells } from "@/lib/table-generator"
 
 interface UnidadesListProps {
   onCreateNew: () => void
@@ -47,12 +48,7 @@ export function UnidadesList({ onCreateNew, onEdit }: UnidadesListProps) {
         <CardContent className="p-0">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Nome</TableHead>
-                <TableHead>Código</TableHead>
-                <TableHead>Organização Social</TableHead>
-                <TableHead className="text-right">Ações</TableHead>
-              </TableRow>
+              {generateTableColumns(UnidadeListSchema)}
             </TableHeader>
             <TableBody>
               {isLoading && (
@@ -61,19 +57,7 @@ export function UnidadesList({ onCreateNew, onEdit }: UnidadesListProps) {
               {isError && (
                 <TableRow><TableCell colSpan={4} className="text-center py-8 text-red-600">Erro: {error.message}</TableCell></TableRow>
               )}
-              {unidades.map((unidade) => (
-                <TableRow key={unidade.id}>
-                  <TableCell className="font-medium">{unidade.nome}</TableCell>
-                  <TableCell>{unidade.codigo}</TableCell>
-                  <TableCell>{unidade.organizacaoSocialId}</TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <Button variant="ghost" size="sm" onClick={() => onEdit(unidade)}><Edit className="h-4 w-4" /></Button>
-                      <Button variant="ghost" size="sm" onClick={() => setDeletingId(unidade.id)} disabled={deleteMutation.isLoading}><Trash2 className="h-4 w-4" /></Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {generateTableCells(UnidadeListSchema, unidades, onEdit, (id) => setDeletingId(id))}
             </TableBody>
           </Table>
         </CardContent>

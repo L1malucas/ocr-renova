@@ -3,20 +3,15 @@
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import *s z from "zod"
+import * as z from "zod"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Form } from "@/components/ui/form"
 import { useCreateCentroCusto, useUpdateCentroCusto } from "@/hooks/use-centro-custo"
-import { CentroCustoDto } from "@/models/centro-custo.model"
+import { CentroCustoDto, CriarCentroCustoSchema } from "@/models/centro-custo.model"
 import { useToast } from "@/components/ui/use-toast"
+import { generateFormFields } from "@/lib/form-generator"
 
-const formSchema = z.object({
-  nome: z.string().min(3, "O nome é obrigatório."),
-  codigo: z.string().min(1, "O código é obrigatório."),
-})
-
-type FormValues = z.infer<typeof formSchema>
+type FormValues = z.infer<typeof CriarCentroCustoSchema>
 
 interface CentroCustoFormProps {
   centroCustoToEdit?: CentroCustoDto | null
@@ -29,8 +24,8 @@ export function CentroCustoForm({ centroCustoToEdit, onSuccess }: CentroCustoFor
   const updateMutation = useUpdateCentroCusto()
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: { nome: "", codigo: "" },
+    resolver: zodResolver(CriarCentroCustoSchema),
+    defaultValues: centroCustoToEdit || {},
   })
 
   useEffect(() => {
@@ -65,20 +60,7 @@ export function CentroCustoForm({ centroCustoToEdit, onSuccess }: CentroCustoFor
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 p-4">
-        <FormField control={form.control} name="nome" render={({ field }) => (
-          <FormItem>
-            <FormLabel>Nome do Centro de Custo</FormLabel>
-            <FormControl><Input placeholder="Nome do Centro de Custo" {...field} /></FormControl>
-            <FormMessage />
-          </FormItem>
-        )} />
-        <FormField control={form.control} name="codigo" render={({ field }) => (
-          <FormItem>
-            <FormLabel>Código</FormLabel>
-            <FormControl><Input placeholder="Código do Centro de Custo" {...field} /></FormControl>
-            <FormMessage />
-          </FormItem>
-        )} />
+        {generateFormFields(CriarCentroCustoSchema, form)}
         <div className="flex justify-end gap-4">
           <Button type="button" variant="outline" onClick={onSuccess}>Cancelar</Button>
           <Button type="submit" disabled={isLoading}>{isLoading ? "Salvando..." : "Salvar"}</Button>

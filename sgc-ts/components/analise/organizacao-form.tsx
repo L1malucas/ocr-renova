@@ -5,18 +5,13 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Form } from "@/components/ui/form"
 import { useCreateOrganizacaoSocial, useUpdateOrganizacaoSocial } from "@/hooks/use-organizacoes-sociais"
-import { OrganizacaoSocialDto } from "@/models/organizacao-social.model"
+import { OrganizacaoSocialDto, CriarOrganizacaoSocialSchema } from "@/models/organizacao-social.model"
 import { useToast } from "@/components/ui/use-toast"
+import { generateFormFields } from "@/lib/form-generator"
 
-const formSchema = z.object({
-  nome: z.string().min(3, "O nome é obrigatório."),
-  cnpj: z.string().length(14, "O CNPJ deve ter 14 dígitos."),
-})
-
-type FormValues = z.infer<typeof formSchema>
+type FormValues = z.infer<typeof CriarOrganizacaoSocialSchema>
 
 interface OrganizacaoFormProps {
   orgToEdit?: OrganizacaoSocialDto | null
@@ -29,8 +24,8 @@ export function OrganizacaoForm({ orgToEdit, onSuccess }: OrganizacaoFormProps) 
   const updateMutation = useUpdateOrganizacaoSocial()
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: { nome: "", cnpj: "" },
+    resolver: zodResolver(CriarOrganizacaoSocialSchema),
+    defaultValues: orgToEdit || {},
   })
 
   useEffect(() => {
@@ -63,20 +58,7 @@ export function OrganizacaoForm({ orgToEdit, onSuccess }: OrganizacaoFormProps) 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 p-4">
-        <FormField control={form.control} name="nome" render={({ field }) => (
-          <FormItem>
-            <FormLabel>Nome da Organização</FormLabel>
-            <FormControl><Input {...field} /></FormControl>
-            <FormMessage />
-          </FormItem>
-        )} />
-        <FormField control={form.control} name="cnpj" render={({ field }) => (
-          <FormItem>
-            <FormLabel>CNPJ</FormLabel>
-            <FormControl><Input {...field} /></FormControl>
-            <FormMessage />
-          </FormItem>
-        )} />
+        {generateFormFields(CriarOrganizacaoSocialSchema, form)}
         <div className="flex justify-end gap-4">
           <Button type="button" variant="outline" onClick={onSuccess}>Cancelar</Button>
           <Button type="submit" disabled={isLoading}>{isLoading ? "Salvando..." : "Salvar"}</Button>

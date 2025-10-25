@@ -5,19 +5,13 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Form } from "@/components/ui/form"
 import { useCreateLinhaOrcamentaria, useUpdateLinhaOrcamentaria } from "@/hooks/use-linhas-orcamentarias"
-import { LinhaOrcamentariaDto } from "@/models/linha-orcamentaria.model"
+import { LinhaOrcamentariaDto, CriarLinhaOrcamentariaSchema } from "@/models/linha-orcamentaria.model"
 import { useToast } from "@/components/ui/use-toast"
+import { generateFormFields } from "@/lib/form-generator"
 
-const formSchema = z.object({
-  nome: z.string().min(3, "O nome é obrigatório."),
-  valor: z.number().positive("O valor deve ser positivo."),
-  // Adicionar outros campos do DTO aqui
-})
-
-type FormValues = z.infer<typeof formSchema>
+type FormValues = z.infer<typeof CriarLinhaOrcamentariaSchema>
 
 interface LinhaOrcamentariaFormProps {
   orcamentoId: string
@@ -31,8 +25,8 @@ export function LinhaOrcamentariaForm({ orcamentoId, linhaToEdit, onSuccess }: L
   const updateMutation = useUpdateLinhaOrcamentaria()
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: { nome: "", valor: 0 },
+    resolver: zodResolver(CriarLinhaOrcamentariaSchema),
+    defaultValues: linhaToEdit || { orcamentoId, quantidade: 0, valorUnitario: 0 },
   })
 
   useEffect(() => {
@@ -69,20 +63,7 @@ export function LinhaOrcamentariaForm({ orcamentoId, linhaToEdit, onSuccess }: L
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 p-4">
-        <FormField control={form.control} name="nome" render={({ field }) => (
-          <FormItem>
-            <FormLabel>Nome da Linha</FormLabel>
-            <FormControl><Input placeholder="Ex: Recursos Humanos" {...field} /></FormControl>
-            <FormMessage />
-          </FormItem>
-        )} />
-        <FormField control={form.control} name="valor" render={({ field }) => (
-          <FormItem>
-            <FormLabel>Valor Orçado</FormLabel>
-            <FormControl><Input type="number" step="0.01" {...field} onChange={e => field.onChange(e.target.valueAsNumber)} /></FormControl>
-            <FormMessage />
-          </FormItem>
-        )} />
+        {generateFormFields(CriarLinhaOrcamentariaSchema, form)}
         <div className="flex justify-end gap-4">
           <Button type="button" variant="outline" onClick={onSuccess}>Cancelar</Button>
           <Button type="submit" disabled={isLoading}>{isLoading ? "Salvando..." : "Salvar Linha"}</Button>

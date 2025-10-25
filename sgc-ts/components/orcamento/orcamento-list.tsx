@@ -3,10 +3,9 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Edit, Trash2 } from "lucide-react"
+import { Table, TableBody, TableHeader, TableRow, TableCell } from "@/components/ui/table"
 import { useDeleteLinhaOrcamentaria } from "@/hooks/use-linhas-orcamentarias"
-import { LinhaOrcamentariaDto } from "@/models/linha-orcamentaria.model"
+import { LinhaOrcamentariaDto, LinhaOrcamentariaListSchema } from "@/models/linha-orcamentaria.model"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,6 +16,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { generateTableColumns, generateTableCells } from "@/lib/table-generator"
 
 interface OrcamentoListProps {
   linhas: LinhaOrcamentariaDto[]
@@ -40,32 +40,13 @@ export function OrcamentoList({ linhas, onEdit }: OrcamentoListProps) {
       <CardContent className="p-0">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead>Nome da Linha</TableHead>
-              <TableHead>Valor Orçado</TableHead>
-              <TableHead className="text-right">Ações</TableHead>
-            </TableRow>
+            {generateTableColumns(LinhaOrcamentariaListSchema)}
           </TableHeader>
           <TableBody>
             {linhas.length === 0 && (
-              <TableRow><TableCell colSpan={3} className="text-center py-8">Nenhuma linha orçamentária encontrada.</TableCell></TableRow>
+              <TableRow><TableCell colSpan={6} className="text-center py-8">Nenhuma linha orçamentária encontrada.</TableCell></TableRow>
             )}
-            {linhas.map((linha) => (
-              <TableRow key={linha.id}>
-                <TableCell className="font-medium">{linha.nome}</TableCell>
-                <TableCell>{linha.valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</TableCell>
-                <TableCell className="text-right">
-                  <div className="flex items-center justify-end gap-2">
-                    <Button variant="ghost" size="sm" onClick={() => onEdit(linha)}>
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="sm" onClick={() => setDeletingId(linha.id)} disabled={deleteMutation.isLoading}>
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
+            {generateTableCells(LinhaOrcamentariaListSchema, linhas, onEdit, (id) => setDeletingId(id))}
           </TableBody>
         </Table>
       </CardContent>

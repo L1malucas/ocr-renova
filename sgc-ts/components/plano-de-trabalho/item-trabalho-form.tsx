@@ -5,20 +5,13 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Form } from "@/components/ui/form"
 import { useCreateItemPlanoTrabalho, useUpdateItemPlanoTrabalho } from "@/hooks/use-itens-trabalho"
-import { ItemPlanoTrabalhoDto } from "@/models/item-plano-trabalho.model"
+import { ItemPlanoTrabalhoDto, CriarItemPlanoTrabalhoSchema } from "@/models/item-plano-trabalho.model"
 import { useToast } from "@/components/ui/use-toast"
+import { generateFormFields } from "@/lib/form-generator"
 
-const formSchema = z.object({
-  meta: z.string().min(3, "A meta é obrigatória."),
-  indicador: z.string().min(3, "O indicador é obrigatório."),
-  responsavel: z.string().min(3, "O responsável é obrigatório."),
-})
-
-type FormValues = z.infer<typeof formSchema>
+type FormValues = z.infer<typeof CriarItemPlanoTrabalhoSchema>
 
 interface ItemTrabalhoFormProps {
   planoTrabalhoId: string
@@ -32,13 +25,17 @@ export function ItemTrabalhoForm({ planoTrabalhoId, itemToEdit, onSuccess }: Ite
   const updateMutation = useUpdateItemPlanoTrabalho()
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: { meta: "", indicador: "", responsavel: "" },
+    resolver: zodResolver(CriarItemPlanoTrabalhoSchema),
+    defaultValues: itemToEdit || { planoTrabalhoId, dataInicio: new Date().toISOString().split("T")[0], dataFim: new Date().toISOString().split("T")[0] },
   })
 
   useEffect(() => {
     if (itemToEdit) {
-      form.reset(itemToEdit)
+      form.reset({
+        ...itemToEdit,
+        dataInicio: new Date(itemToEdit.dataInicio).toISOString().split("T")[0],
+        dataFim: new Date(itemToEdit.dataFim).toISOString().split("T")[0],
+      })
     }
   }, [itemToEdit, form])
 
@@ -68,27 +65,7 @@ export function ItemTrabalhoForm({ planoTrabalhoId, itemToEdit, onSuccess }: Ite
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 p-4">
-        <FormField control={form.control} name="meta" render={({ field }) => (
-          <FormItem>
-            <FormLabel>Meta</FormLabel>
-            <FormControl><Textarea placeholder="Descrição da meta" {...field} /></FormControl>
-            <FormMessage />
-          </FormItem>
-        )} />
-        <FormField control={form.control} name="indicador" render={({ field }) => (
-          <FormItem>
-            <FormLabel>Indicador</FormLabel>
-            <FormControl><Input placeholder="Ex: Relatório final entregue" {...field} /></FormControl>
-            <FormMessage />
-          </FormItem>
-        )} />
-        <FormField control={form.control} name="responsavel" render={({ field }) => (
-          <FormItem>
-            <FormLabel>Responsável</FormLabel>
-            <FormControl><Input placeholder="Nome do responsável" {...field} /></FormControl>
-            <FormMessage />
-          </FormItem>
-        )} />
+        {generateFormFields(CriarItemPlanoTrabalhoSchema, form)}
         <div className="flex justify-end gap-4">
           <Button type="button" variant="outline" onClick={onSuccess}>Cancelar</Button>
           <Button type="submit" disabled={isLoading}>{isLoading ? "Salvando..." : "Salvar Item"}</Button>

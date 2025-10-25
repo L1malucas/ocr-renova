@@ -3,14 +3,14 @@
 import { useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { useGetOrcamentoByContratoId } from "@/hooks/use-orcamento"
-import { OrcamentoList } from "./orcamento-list"
+import { OrcamentosList } from "./orcamentos-list"
 import { LinhaOrcamentariaForm } from "./linha-orcamentaria-form"
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer"
 import { Button } from "@/components/ui/button"
 import { PlusCircle } from "lucide-react"
 import { LinhaOrcamentariaDto } from "@/models/linha-orcamentaria.model"
 
-export function OrcamentoView() {
+export function  OrcamentoView() {
   const searchParams = useSearchParams()
   const contratoId = searchParams.get("contratoId")
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
@@ -60,9 +60,10 @@ export function OrcamentoView() {
         </Button>
       </div>
 
-      <OrcamentoList 
-        linhas={orcamento.linhasOrcamentarias || []} 
-        onEdit={handleEdit} 
+      <OrcamentosList 
+        contratoId={contratoId}
+        onCreateNew={handleCreateNew}
+        onEdit={handleEdit}
       />
 
       <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>

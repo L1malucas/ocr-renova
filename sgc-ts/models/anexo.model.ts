@@ -1,3 +1,5 @@
+import * as z from 'zod';
+
 /**
  * DTO principal para representar um Anexo.
  */
@@ -23,3 +25,25 @@ export interface CreateAnexoParams {
   /** Descrição opcional para o anexo. */
   descricao?: string;
 }
+
+export const CriarAnexoSchema = z.object({
+  arquivo: z.any(),
+  tipoProprietario: z.string(),
+  proprietarioId: z.string(),
+  descricao: z.string().optional(),
+});
+
+export interface AnexoListDto {
+  id: string;
+  nomeArquivo: string | null;
+  descricao: string | null;
+  tipoMime: string | null;
+  tamanhoBytes: number;
+}
+
+export const AnexoListSchema = z.object({
+  nomeArquivo: z.string(),
+  descricao: z.string(),
+  tipoMime: z.string(),
+  tamanhoBytes: z.number(),
+});

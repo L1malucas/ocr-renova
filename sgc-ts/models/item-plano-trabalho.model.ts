@@ -1,3 +1,5 @@
+import * as z from 'zod';
+
 /**
  * Enum para o Tipo de Métrica de um item do plano de trabalho.
  */
@@ -76,3 +78,34 @@ export interface AtualizarItemPlanoTrabalhoDto {
   dataFim: string; // ISO date-time string
   categoriaId: string;
 }
+
+export const CriarItemPlanoTrabalhoSchema = z.object({
+  planoTrabalhoId: z.string().min(1, "O ID do plano de trabalho é obrigatório."),
+  itemPaiId: z.string().optional(),
+  objetivo: z.string().min(3, "O objetivo é obrigatório."),
+  acao: z.string().min(3, "A ação é obrigatória."),
+  descricao: z.string().optional(),
+  valorMeta: z.number().optional(),
+  tipoMetrica: z.nativeEnum(TipoMetrica),
+  unidadeMedida: z.string().optional(),
+  frequencia: z.nativeEnum(Frequencia).optional(),
+  obrigatorio: z.boolean().optional(),
+  dataInicio: z.string().min(1, "A data de início é obrigatória."),
+  dataFim: z.string().min(1, "A data de fim é obrigatória."),
+  categoriaId: z.string().min(1, "A categoria é obrigatória."),
+});
+
+export interface ItemPlanoTrabalhoListDto {
+  id: string;
+  objetivo: string | null;
+  acao: string | null;
+  status: string | null;
+  valorMeta: number | null;
+}
+
+export const ItemPlanoTrabalhoListSchema = z.object({
+  objetivo: z.string(),
+  acao: z.string(),
+  status: z.string(),
+  valorMeta: z.number(),
+});

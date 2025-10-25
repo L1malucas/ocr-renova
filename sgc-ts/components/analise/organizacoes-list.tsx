@@ -3,11 +3,12 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Plus, Edit, Trash2 } from "lucide-react"
+import { Table, TableBody, TableHeader, TableRow, TableCell } from "@/components/ui/table"
+import { Plus } from "lucide-react"
 import { useGetOrganizacoesSociais, useDeleteOrganizacaoSocial } from "@/hooks/use-organizacoes-sociais"
-import { OrganizacaoSocialDto } from "@/models/organizacao-social.model"
+import { OrganizacaoSocialDto, OrganizacaoSocialListSchema } from "@/models/organizacao-social.model"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
+import { generateTableColumns, generateTableCells } from "@/lib/table-generator"
 
 interface OrganizacoesListProps {
   onCreateNew: () => void
@@ -44,31 +45,39 @@ export function OrganizacoesList({ onCreateNew, onEdit }: OrganizacoesListProps)
         <CardContent className="p-0">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Nome</TableHead>
-                <TableHead>CNPJ</TableHead>
-                <TableHead className="text-right">Ações</TableHead>
-              </TableRow>
+              {generateTableColumns(OrganizacaoSocialListSchema)}
             </TableHeader>
             <TableBody>
-              {isLoading && <TableRow><TableCell colSpan={3} className="text-center py-8">Carregando...</TableCell></TableRow>}
-              {isError && <TableRow><TableCell colSpan={3} className="text-center py-8 text-red-500">Erro ao carregar dados.</TableCell></TableRow>}
-              {organizacoes.map((org) => (
-                <TableRow key={org.id}>
-                  <TableCell>{org.nome}</TableCell>
-                  <TableCell>{org.cnpj}</TableCell>
-                  <TableCell className="text-right">
-                    <Button variant="ghost" size="sm" onClick={() => onEdit(org)}><Edit className="h-4 w-4" /></Button>
-                    <Button variant="ghost" size="sm" onClick={() => setDeletingId(org.id)} disabled={deleteMutation.isLoading}><Trash2 className="h-4 w-4" /></Button>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {isLoading && <TableRow><TableCell colSpan={4} className="text-center py-8">Carregando...</TableCell></TableRow>}
+              {isError && <TableRow><TableCell colSpan={4} className="text-center py-8 text-red-500">Erro ao carregar dados.</TableCell></TableRow>}
+              {generateTableCells(OrganizacaoSocialListSchema, organizacoes, onEdit, (id) => setDeletingId(id))}
             </TableBody>
           </Table>
         </CardContent>
       </Card>
 
-      {/* Paginação e Dialogo de Exclusão aqui */}
+      {meta && (
+        <div className="flex justify-end items-center gap-4">
+          <span className="text-sm text-muted-foreground">Página {meta.currentPage} de {meta.totalPages}</span>
+          <Button onClick={() => setPage(p => p - 1)} disabled={!meta.hasPreviousPage}>Anterior</Button>
+          <Button onClick={() => setPage(p => p + 1)} disabled={!meta.hasNextPage}>Próxima</Button>
+        </div>
+      )}
+
+      <AlertDialog open={!!deletingId} onOpenChange={() => setDeletingId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
+            <AlertDialogDescription>Tem certeza que deseja excluir esta organização?</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete} disabled={deleteMutation.isLoading}>
+              {deleteMutation.isLoading ? "Excluindo..." : "Excluir"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
