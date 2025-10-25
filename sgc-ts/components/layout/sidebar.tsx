@@ -65,6 +65,7 @@ const menuGroups = [
     items: [
       { href: "/relatorios", label: "Relatórios", icon: FileText },
       { href: "/integracoes", label: "Integrações", icon: Plug },
+      { href: "/organizacoes-sociais", label: "Organizações Sociais", icon: Building2 },
       { href: "/usuarios", label: "Usuários", icon: Users },
       { href: "/unidades", label: "Unidades", icon: Building2 },
       { href: "/configuracoes", label: "Configurações", icon: Settings },
