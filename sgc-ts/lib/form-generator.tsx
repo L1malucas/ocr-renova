@@ -40,9 +40,10 @@ export function generateFormFields<T extends z.ZodObject<any, any, any>>(
 
 function getFieldType(fieldSchema: z.ZodType<any, any, any>): string {
   if (fieldSchema instanceof z.ZodString) {
-    if (fieldSchema.isEmail) {
-      return "email";
-    }
+    const def: any = (fieldSchema as any)._def;
+    const checks: Array<{ kind: string }>|undefined = def?.checks;
+    const isEmail = Array.isArray(checks) && checks.some((c) => c.kind === "email");
+    if (isEmail) return "email";
     return "text";
   }
   if (fieldSchema instanceof z.ZodNumber) {
@@ -60,12 +61,43 @@ function getFieldLabel(key: string): string {
   return result.charAt(0).toUpperCase() + result.slice(1);
 }
 
+function maskCNPJ(value: string) {
+  const digits = value.replace(/\D/g, "").slice(0, 14);
+  const parts = [] as string[];
+  if (digits.length > 0) parts.push(digits.slice(0, 2));
+  if (digits.length >= 3) parts.push(digits.slice(2, 5));
+  if (digits.length >= 6) parts.push(digits.slice(5, 8));
+  const branch = digits.slice(8, 12);
+  const sufix = digits.slice(12, 14);
+  let masked = "";
+  if (parts.length) masked = parts[0];
+  if (parts.length >= 2) masked = `${parts[0]}.${parts[1]}`;
+  if (parts.length >= 3) masked = `${masked}.${parts[2]}`;
+  if (branch) masked = `${masked}/${branch}`;
+  if (sufix) masked = `${masked}-${sufix}`;
+  return masked;
+}
+
 function renderField(key: string, type: string, field: any, form: any) {
+  // Arquivos
   if (type === "file") {
     return (
       <FileUpload
         onFileChange={(file) => field.onChange(file)}
         accept=".doc,.docx,.xls,.xlsx,.pdf"
+      />
+    );
+  }
+
+  // CNPJ com máscara visual; mantém apenas dígitos no form state
+  if (key.toLowerCase() === "cnpj") {
+    const raw = (field.value as string) || "";
+    return (
+      <Input
+        inputMode="numeric"
+        placeholder="00.000.000/0000-00"
+        value={maskCNPJ(raw)}
+        onChange={(e) => field.onChange(e.target.value.replace(/\D/g, ""))}
       />
     );
   }
