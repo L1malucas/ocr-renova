@@ -30,7 +30,7 @@ export function ReceitasList({ onCreateNew, onEdit }: ReceitasListProps) {
   const [deletingId, setDeletingId] = useState<string | null>(null)
 
   // Busca os dados usando o hook
-  const { data, isLoading, isError, error } = useGetReceitas({ pageNumber: page, pageSize: 10 /*, searchTerm: searchTerm */ })
+  const { data, isLoading, isError, error } = useGetReceitas({ pageNumber: page, pageSize: 10 })
   const deleteMutation = useDeleteReceita()
 
   const receitas = data?.data ?? []

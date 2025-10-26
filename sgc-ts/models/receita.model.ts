@@ -1,3 +1,4 @@
+import { formatarData } from '@/lib';
 import * as z from 'zod';
 
 /**
@@ -21,13 +22,12 @@ export interface ReceitaDto {
  * DTO para a criação de uma nova Receita.
  */
 export interface CriarReceitaDto {
-  descricao: string;
-  valor: number;
-  dataRecebimento: string; // ISO date-time string
-  repasseId?: string | null;
-  centroCustoId?: string | null;
-  categoriaId: string;
-  observacoes?: string | null;
+  id: string | null;
+  valor: number ,
+  dataRecebimento: string | null;
+  fonteRecursoId: string | null;
+  categoriaId: string | null;
+  observacoes: string | null;
 }
 
 /**
@@ -45,7 +45,7 @@ export interface AtualizarReceitaDto {
 
 export const CriarReceitaSchema = z.object({
   descricao: z.string().min(3, "A descrição é obrigatória."),
-  valor: z.number().positive("O valor deve ser positivo."),
+  valor: z.coerce.number().positive("O valor deve ser positivo."),
   dataRecebimento: z.string().min(1, "A data de recebimento é obrigatória."),
   repasseId: z.string().optional(),
   centroCustoId: z.string().optional(),
@@ -66,8 +66,5 @@ export interface ReceitaListDto {
 export const ReceitaListSchema = z.object({
   descricao: z.string(),
   valor: z.number(),
-  dataRecebimento: z.string(),
-  nomeRepasse: z.string(),
-  nomeCentroCusto: z.string(),
-  nomeCategoria: z.string(),
+  dataRecebimento: z.string()
 });

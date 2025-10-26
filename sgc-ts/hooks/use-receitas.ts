@@ -7,7 +7,7 @@ import {
   deleteReceita,
   ListParams,
 } from "@/services/receitas.service"
-import { CriarReceitaDto, AtualizarReceitaDto } from "@/models/receita.model"
+import { CriarReceitaDto, AtualizarReceitaDto, ReceitaListSchema } from "@/models/receita.model"
 
 // Chave principal para as queries de receitas, usada para invalidação
 const RECEITAS_QUERY_KEY = "receitas"
@@ -19,6 +19,11 @@ export const useGetReceitas = (params: ListParams) => {
   return useQuery({
     queryKey: [RECEITAS_QUERY_KEY, params],
     queryFn: () => getReceitas(params),
+    // Transforma os dados usando o schema Zod
+    select: (data) => ({
+      ...data,
+      data: data.data.map(receita => ReceitaListSchema.parse(receita))
+    }),
     // Mantém os dados anteriores enquanto busca novos, para uma experiência de paginação mais suave
     keepPreviousData: true,
   })

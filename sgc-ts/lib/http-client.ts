@@ -5,9 +5,9 @@ import axios, {
   type AxiosError,
   type InternalAxiosRequestConfig,
 } from 'axios';
-import { toast } from '@/components/ui/use-toast';
 import type { ApiResponse, PaginatedApiResponse } from './types';
 import { AttachmentService } from './attachment-service';
+import { toast } from '@/hooks/use-toast';
 
 // Custom request config to allow passing extra parameters
 export interface CustomRequestConfig extends AxiosRequestConfig {
@@ -77,10 +77,16 @@ export class HttpClient {
         }
 
         toast({
+
           title: `Erro (${response?.status || 'Sem resposta'})`,
+
           description: response?.data?.messages?.[0] || error.message || 'Ocorreu um erro inesperado.',
+
           variant: 'destructive',
+
         });
+
+        console.error("API Error Interceptor:", error);
 
         return Promise.reject(error);
       }
