@@ -22,7 +22,7 @@ export interface ListParams {
 export const getLinhasOrcamentarias = (
   params: ListParams
 ): Promise<PaginatedApiResponse<LinhaOrcamentariaDto[]>> => {
-  return apiClient.getPaginated("/linhas-orcamentarias", { params })
+  return apiClient.getPaginated("/categories/linhas-orcamentarias", { params })
 }
 
 /**
@@ -31,7 +31,7 @@ export const getLinhasOrcamentarias = (
 export const getLinhaOrcamentariaById = (
   id: string
 ): Promise<ApiResponse<LinhaOrcamentariaDto>> => {
-  return apiClient.get(`/linhas-orcamentarias/${id}`)
+  return apiClient.get(`/categories/linhas-orcamentarias/${id}`)
 }
 
 /**
@@ -40,7 +40,7 @@ export const getLinhaOrcamentariaById = (
 export const createLinhaOrcamentaria = (
   data: CriarLinhaOrcamentariaDto
 ): Promise<ApiResponse<LinhaOrcamentariaDto>> => {
-  return apiClient.post("/linhas-orcamentarias", data, {
+  return apiClient.post("/categories/linhas-orcamentarias", data, {
     successMessage: "Linha Orçamentária criada com sucesso.",
   })
 }
@@ -52,7 +52,7 @@ export const updateLinhaOrcamentaria = (
   id: string,
   data: AtualizarLinhaOrcamentariaDto
 ): Promise<ApiResponse<LinhaOrcamentariaDto>> => {
-  return apiClient.put(`/linhas-orcamentarias/${id}`, data, {
+  return apiClient.put(`/categories/linhas-orcamentarias/${id}`, data, {
     successMessage: "Linha Orçamentária atualizada com sucesso.",
   })
 }
@@ -61,7 +61,7 @@ export const updateLinhaOrcamentaria = (
  * Exclui uma Linha Orçamentária pelo seu ID.
  */
 export const deleteLinhaOrcamentaria = (id: string): Promise<ApiResponse<void>> => {
-  return apiClient.delete(`/linhas-orcamentarias/${id}`, {
+  return apiClient.delete(`/categories/linhas-orcamentarias/${id}`, {
     successMessage: "Linha Orçamentária excluída com sucesso.",
   })
 }

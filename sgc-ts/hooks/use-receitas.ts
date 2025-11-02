@@ -7,9 +7,12 @@ import {
   deleteReceita,
   ListParams,
 } from "@/services/receitas.service"
-import { CriarReceitaDto, AtualizarReceitaDto, ReceitaListSchema } from "@/models/receita.model"
+import {
+  CriarReceitaDto,
+  AtualizarReceitaDto,
+} from "@/models/receita.model"
 
-// Chave principal para as queries de receitas, usada para invalidação
+// Chave principal para as queries de receitas
 const RECEITAS_QUERY_KEY = "receitas"
 
 /**
@@ -19,25 +22,17 @@ export const useGetReceitas = (params: ListParams) => {
   return useQuery({
     queryKey: [RECEITAS_QUERY_KEY, params],
     queryFn: () => getReceitas(params),
-    // Transforma os dados usando o schema Zod
-    select: (data) => ({
-      ...data,
-      data: data.data.map(receita => ReceitaListSchema.parse(receita))
-    }),
-    // Mantém os dados anteriores enquanto busca novos, para uma experiência de paginação mais suave
     keepPreviousData: true,
   })
 }
 
 /**
  * Hook para buscar uma única receita pelo seu ID.
- * @param id - O ID da receita a ser buscada.
  */
 export const useGetReceitaById = (id: string | null) => {
   return useQuery({
     queryKey: [RECEITAS_QUERY_KEY, id],
     queryFn: () => getReceitaById(id!),
-    // A query só será executada se o ID não for nulo
     enabled: !!id,
   })
 }
@@ -51,7 +46,6 @@ export const useCreateReceita = () => {
   return useMutation({
     mutationFn: (data: CriarReceitaDto) => createReceita(data),
     onSuccess: () => {
-      // Invalida todas as queries de lista de receitas para forçar a atualização
       queryClient.invalidateQueries({ queryKey: [RECEITAS_QUERY_KEY] })
     },
   })
@@ -66,10 +60,11 @@ export const useUpdateReceita = () => {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: AtualizarReceitaDto }) =>
       updateReceita(id, data),
-    onSuccess: (data, variables) => {
-      // Invalida a lista e também o cache da receita específica que foi alterada
+    onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: [RECEITAS_QUERY_KEY] })
-      queryClient.invalidateQueries({ queryKey: [RECEITAS_QUERY_KEY, variables.id] })
+      queryClient.invalidateQueries({
+        queryKey: [RECEITAS_QUERY_KEY, variables.id],
+      })
     },
   })
 }

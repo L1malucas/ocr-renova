@@ -1,64 +1,26 @@
-import * as z from 'zod';
-import { ApiResponse, PaginatedApiResponse } from "@/lib/types";
+import * as z from "zod"
 
-export interface AtualizarUnidadeDto {
-  /** @minLength 1 */
-  nome: string;
-  /** @minLength 1 */
-  cnpj: string;
-  codigoCnes?: string | null;
-  telefonePrincipal?: string | null;
-  /** @format email */
-  emailPrincipal?: string | null;
+export interface UnidadeDto {
+  id: string
+  nome: string
+  // Adicione outros campos conforme necessário
 }
 
 export interface CriarUnidadeDto {
-  /** @minLength 1 */
-  nome: string;
-  /** @minLength 1 */
-  cnpj: string;
-  codigoCnes?: string | null;
-  telefonePrincipal?: string | null;
-  /** @format email */
-  emailPrincipal?: string | null;
-  /** @format uuid */
-  organizacaoSocialId: string;
+  nome: string
 }
 
-export interface UnidadeDto {
-  /** @format uuid */
-  id?: string;
-  nome?: string | null;
-  cnpj?: string | null;
-  codigoCnes?: string | null;
-  telefonePrincipal?: string | null;
-  emailPrincipal?: string | null;
-  /** @format uuid */
-  organizacaoSocialId?: string;
-}
-
-export interface UnidadeDtoApiResponse extends ApiResponse<UnidadeDto> {}
-
-export interface UnidadeDtoPagedApiResponse extends PaginatedApiResponse<UnidadeDto[]> {}
+export type AtualizarUnidadeDto = Partial<CriarUnidadeDto>
 
 export const CriarUnidadeSchema = z.object({
-  nome: z.string().min(1, "O nome é obrigatório."),
-  cnpj: z.string().min(1, "O CNPJ é obrigatório."),
-  codigoCnes: z.string().optional(),
-  telefonePrincipal: z.string().optional(),
-  emailPrincipal: z.string().email("E-mail inválido.").optional(),
-  organizacaoSocialId: z.string().min(1, "A organização social é obrigatória."),
-});
+  nome: z.string().min(3, "O nome é obrigatório."),
+})
 
 export interface UnidadeListDto {
-  id?: string;
-  nome?: string | null;
-  cnpj?: string | null;
-  organizacaoSocialId?: string;
+  id: string
+  nome: string
 }
 
 export const UnidadeListSchema = z.object({
   nome: z.string(),
-  cnpj: z.string(),
-  organizacaoSocialId: z.string(),
-});
+})

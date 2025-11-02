@@ -22,21 +22,16 @@ export interface ListParams {
 export const getCategorias = (
   params: ListParams
 ): Promise<PaginatedApiResponse<CategoriaDto[]>> => {
-  return apiClient.getPaginated("/categorias", { params })
+  return apiClient.getPaginated("/categories/despesas", { params })
 }
-
-/**
- * Busca todas as Categorias (sem paginação).
- */
-export const getAllCategorias = (): Promise<ApiResponse<CategoriaDto[]>> => {
-  return apiClient.get("/categorias")
-}
-
+// curl -X 'GET' \
+//   'https://cpg-caduceu-prestacao-api.onrender.com/api/categories/despesas?pageNumber=1&pageSize=10' \
+//   -H 'accept: application/json'
 /**
  * Busca uma Categoria pelo seu ID.
  */
 export const getCategoriaById = (id: string): Promise<ApiResponse<CategoriaDto>> => {
-  return apiClient.get(`/categorias/${id}`)
+  return apiClient.get(`/categories/despesas/${id}`)
 }
 
 /**
@@ -45,7 +40,7 @@ export const getCategoriaById = (id: string): Promise<ApiResponse<CategoriaDto>>
 export const createCategoria = (
   data: CriarCategoriaDto
 ): Promise<ApiResponse<CategoriaDto>> => {
-  return apiClient.post("/categorias", data, {
+  return apiClient.post("/categories/despesas", data, {
     successMessage: "Categoria criada com sucesso.",
   })
 }
@@ -57,7 +52,7 @@ export const updateCategoria = (
   id: string,
   data: AtualizarCategoriaDto
 ): Promise<ApiResponse<CategoriaDto>> => {
-  return apiClient.put(`/categorias/${id}`, data, {
+  return apiClient.put(`/categories/despesas/${id}`, data, {
     successMessage: "Categoria atualizada com sucesso.",
   })
 }
@@ -66,7 +61,7 @@ export const updateCategoria = (
  * Exclui uma Categoria pelo seu ID.
  */
 export const deleteCategoria = (id: string): Promise<ApiResponse<void>> => {
-  return apiClient.delete(`/categorias/${id}`, {
+  return apiClient.delete(`/categories/despesas/${id}`, {
     successMessage: "Categoria excluída com sucesso.",
   })
 }

@@ -1,24 +1,26 @@
-/**
- * DTO principal para representar uma Fonte de Recurso.
- */
+import * as z from "zod"
+
 export interface FonteRecursoDto {
-  id: string;
-  nome: string | null;
-  descricao: string | null;
+  id: string
+  nome: string
+  // Adicione outros campos conforme necessário
 }
 
-/**
- * DTO para a criação de uma nova Fonte de Recurso.
- */
 export interface CriarFonteRecursoDto {
-  nome: string;
-  descricao?: string | null;
+  nome: string
 }
 
-/**
- * DTO para a atualização de uma Fonte de Recurso.
- */
-export interface AtualizarFonteRecursoDto {
-  nome: string;
-  descricao?: string | null;
+export type AtualizarFonteRecursoDto = Partial<CriarFonteRecursoDto>
+
+export const CriarFonteRecursoSchema = z.object({
+  nome: z.string().min(3, "O nome é obrigatório."),
+})
+
+export interface FonteRecursoListDto {
+  id: string
+  nome: string
 }
+
+export const FonteRecursoListSchema = z.object({
+  nome: z.string(),
+})
