@@ -26,15 +26,6 @@ export const getFornecedores = (
 }
 
 /**
- * Busca todos os Fornecedores (sem paginação).
- */
-export const getAllFornecedores = (): Promise<ApiResponse<FornecedorDto[]>> => {
-  // O endpoint "/all" é uma convenção comum para endpoints não paginados.
-  // Ajuste conforme a sua API.
-  return apiClient.get("/fornecedores/all")
-}
-
-/**
  * Busca um Fornecedor pelo seu ID.
  */
 export const getFornecedorById = (

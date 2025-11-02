@@ -1,53 +1,26 @@
-import * as z from 'zod';
+import * as z from "zod"
 
-/**
- * DTO principal para representar uma Categoria.
- */
 export interface CategoriaDto {
-  id: string;
-  name: string | null;
-  code: string | null;
-  description: string | null;
-  parentCategoryId: string | null;
-  subcategories: CategoriaDto[] | null;
+  id: string
+  nome: string
+  // Adicione outros campos conforme necessário
 }
 
-/**
- * DTO para a criação de uma nova Categoria.
- */
 export interface CriarCategoriaDto {
-  name: string;
-  code?: string | null;
-  description?: string | null;
-  parentCategoryId?: string | null;
+  nome: string
 }
 
-/**
- * DTO para a atualização de uma Categoria.
- */
-export interface AtualizarCategoriaDto {
-  name: string;
-  code?: string | null;
-  description?: string | null;
-  parentCategoryId?: string | null;
-}
+export type AtualizarCategoriaDto = Partial<CriarCategoriaDto>
 
 export const CriarCategoriaSchema = z.object({
-  name: z.string().min(3, "O nome é obrigatório."),
-  code: z.string().optional(),
-  description: z.string().optional(),
-  parentCategoryId: z.string().optional(),
-});
+  nome: z.string().min(3, "O nome é obrigatório."),
+})
 
 export interface CategoriaListDto {
-  id: string;
-  name: string | null;
-  code: string | null;
-  description: string | null;
+  id: string
+  nome: string
 }
 
 export const CategoriaListSchema = z.object({
-  name: z.string(),
-  code: z.string(),
-  description: z.string(),
-});
+  nome: z.string(),
+})

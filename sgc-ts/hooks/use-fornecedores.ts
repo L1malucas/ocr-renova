@@ -1,7 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import {
   getFornecedores,
-  getAllFornecedores,
   getFornecedorById,
   createFornecedor,
   updateFornecedor,
@@ -24,17 +23,6 @@ export const useGetFornecedores = (params: ListParams) => {
     queryKey: [FORNECEDORES_QUERY_KEY, params],
     queryFn: () => getFornecedores(params),
     keepPreviousData: true,
-  })
-}
-
-/**
- * Hook para buscar todos os fornecedores (sem paginação).
- */
-export const useAllFornecedores = () => {
-  return useQuery({
-    queryKey: [FORNECEDORES_QUERY_KEY, "all"],
-    queryFn: () => getAllFornecedores(),
-    select: response => response.data,
   })
 }
 

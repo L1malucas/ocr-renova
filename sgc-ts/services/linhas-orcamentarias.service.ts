@@ -1,22 +1,67 @@
-import apiClient from '@/lib/api-client';
-import type { ApiResponse } from '@/lib/types';
-import type { LinhaOrcamentariaDto, CriarLinhaOrcamentariaDto, AtualizarLinhaOrcamentariaDto, } from '@/models/linha-orcamentaria.model';
+import apiClient from "@/lib/api-client"
+import type { ApiResponse, PaginatedApiResponse } from "@/lib/types"
+import type {
+  LinhaOrcamentariaDto,
+  CriarLinhaOrcamentariaDto,
+  AtualizarLinhaOrcamentariaDto,
+} from "@/models/linha-orcamentaria.model"
 
 // -----------------
 // Service Functions
 // -----------------
 
+/** Parâmetros de paginação para listagens. */
+export interface ListParams {
+  pageNumber?: number
+  pageSize?: number
+}
+
 /**
- * Cria uma nova linha orçamentária associada a um orçamento específico.
+ * Busca uma lista paginada de Linhas Orçamentárias.
  */
-export const createLinhaOrcamentaria = (orcamentoId: string, data: CriarLinhaOrcamentariaDto
+export const getLinhasOrcamentarias = (
+  params: ListParams
+): Promise<PaginatedApiResponse<LinhaOrcamentariaDto[]>> => {
+  return apiClient.getPaginated("/linhas-orcamentarias", { params })
+}
 
-): Promise<ApiResponse<LinhaOrcamentariaDto>> => { return apiClient.post(`/orcamentos/${orcamentoId}/linhas`, data, { successMessage: 'Linha Orçamentária criada com sucesso.', }); };
+/**
+ * Busca uma Linha Orçamentária pelo seu ID.
+ */
+export const getLinhaOrcamentariaById = (
+  id: string
+): Promise<ApiResponse<LinhaOrcamentariaDto>> => {
+  return apiClient.get(`/linhas-orcamentarias/${id}`)
+}
 
-/*** Atualiza uma linha orçamentária existente.*/
-export const updateLinhaOrcamentaria = (linhaId: string, data: AtualizarLinhaOrcamentariaDto
+/**
+ * Cria uma nova Linha Orçamentária.
+ */
+export const createLinhaOrcamentaria = (
+  data: CriarLinhaOrcamentariaDto
+): Promise<ApiResponse<LinhaOrcamentariaDto>> => {
+  return apiClient.post("/linhas-orcamentarias", data, {
+    successMessage: "Linha Orçamentária criada com sucesso.",
+  })
+}
 
-): Promise<ApiResponse<void>> => { return apiClient.put(`/linhas-orcamentarias/${linhaId}`, data, { successMessage: 'Linha Orçamentária atualizada com sucesso.', }); };
+/**
+ * Atualiza uma Linha Orçamentária existente.
+ */
+export const updateLinhaOrcamentaria = (
+  id: string,
+  data: AtualizarLinhaOrcamentariaDto
+): Promise<ApiResponse<LinhaOrcamentariaDto>> => {
+  return apiClient.put(`/linhas-orcamentarias/${id}`, data, {
+    successMessage: "Linha Orçamentária atualizada com sucesso.",
+  })
+}
 
-/*** Exclui uma linha orçamentária pelo seu ID.*/
-export const deleteLinhaOrcamentaria = (linhaId: string): Promise<ApiResponse<void>> => { return apiClient.delete(`/linhas-orcamentarias/${linhaId}`, { successMessage: 'Linha Orçamentária excluída com sucesso.', }); }; 
+/**
+ * Exclui uma Linha Orçamentária pelo seu ID.
+ */
+export const deleteLinhaOrcamentaria = (id: string): Promise<ApiResponse<void>> => {
+  return apiClient.delete(`/linhas-orcamentarias/${id}`, {
+    successMessage: "Linha Orçamentária excluída com sucesso.",
+  })
+}
