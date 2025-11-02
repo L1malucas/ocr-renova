@@ -14,6 +14,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useCreateDespesa, useUpdateDespesa } from "@/hooks/use-despesas"
 import { DespesaDto } from "@/models/despesa.model"
 import { useToast } from "@/components/ui/use-toast"
+import { useCache } from "@/hooks/use-cache"
+import { FornecedorDto } from "@/models/fornecedor.model"
 
 // Schema de validação com Zod
 const formSchema = z.object({
@@ -36,6 +38,9 @@ export function DespesaFormAvancado({ despesaToEdit, onSuccess }: DespesaFormPro
   const { toast } = useToast()
   const createMutation = useCreateDespesa()
   const updateMutation = useUpdateDespesa()
+  const { getCacheItem } = useCache()
+
+  const fornecedores = getCacheItem<FornecedorDto[]>("fornecedores") || []
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -152,9 +157,11 @@ export function DespesaFormAvancado({ despesaToEdit, onSuccess }: DespesaFormPro
                         <SelectTrigger><SelectValue placeholder="Selecione o fornecedor" /></SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {/* TODO: Popular com dados reais */}
-                        <SelectItem value="fornecedor1">Fornecedor A</SelectItem>
-                        <SelectItem value="fornecedor2">Fornecedor B</SelectItem>
+                        {fornecedores.map(fornecedor => (
+                          <SelectItem key={fornecedor.id} value={fornecedor.id}>
+                            {fornecedor.nome}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                     <FormMessage />

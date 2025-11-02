@@ -1,6 +1,10 @@
-import apiClient from '@/lib/api-client';
-import type { ApiResponse, PaginatedApiResponse } from '@/lib/types';
-import type { FornecedorDto, CriarFornecedorDto, AtualizarFornecedorDto } from '@/models/fornecedor.model';
+import apiClient from "@/lib/api-client"
+import type { ApiResponse, PaginatedApiResponse } from "@/lib/types"
+import type {
+  FornecedorDto,
+  CriarFornecedorDto,
+  AtualizarFornecedorDto,
+} from "@/models/fornecedor.model"
 
 // -----------------
 // Service Functions
@@ -8,45 +12,65 @@ import type { FornecedorDto, CriarFornecedorDto, AtualizarFornecedorDto } from '
 
 /** Parâmetros de paginação para listagens. */
 export interface ListParams {
-  pageNumber?: number;
-  pageSize?: number;
+  pageNumber?: number
+  pageSize?: number
 }
 
 /**
  * Busca uma lista paginada de Fornecedores.
  */
-export const getFornecedores = (params: ListParams): Promise<PaginatedApiResponse<FornecedorDto[]>> => {
-  return apiClient.getPaginated('/fornecedores', { params });
-};
+export const getFornecedores = (
+  params: ListParams
+): Promise<PaginatedApiResponse<FornecedorDto[]>> => {
+  return apiClient.getPaginated("/fornecedores", { params })
+}
+
+/**
+ * Busca todos os Fornecedores (sem paginação).
+ */
+export const getAllFornecedores = (): Promise<ApiResponse<FornecedorDto[]>> => {
+  // O endpoint "/all" é uma convenção comum para endpoints não paginados.
+  // Ajuste conforme a sua API.
+  return apiClient.get("/fornecedores/all")
+}
 
 /**
  * Busca um Fornecedor pelo seu ID.
  */
-export const getFornecedorById = (id: string): Promise<ApiResponse<FornecedorDto>> => {
-  return apiClient.get(`/fornecedores/${id}`);
-};
+export const getFornecedorById = (
+  id: string
+): Promise<ApiResponse<FornecedorDto>> => {
+  return apiClient.get(`/fornecedores/${id}`)
+}
 
 /**
  * Cria um novo Fornecedor.
  */
-export const createFornecedor = (data: CriarFornecedorDto): Promise<ApiResponse<FornecedorDto>> => {
-  const { attachment, ...rest } = data;
-  return apiClient.post('/fornecedores', rest, {
-    attachments: attachment ? [attachment] : [],
-    successMessage: 'Fornecedor criado com sucesso.',
-  });
-};
+export const createFornecedor = (
+  data: CriarFornecedorDto
+): Promise<ApiResponse<FornecedorDto>> => {
+  return apiClient.post("/fornecedores", data, {
+    successMessage: "Fornecedor criado com sucesso.",
+  })
+}
 
 /**
  * Atualiza um Fornecedor existente.
  */
-export const updateFornecedor = (id: string, data: AtualizarFornecedorDto): Promise<ApiResponse<void>> => {
-  return apiClient.put(`/fornecedores/${id}`, data, { successMessage: 'Fornecedor atualizado com sucesso.' });
-};
+export const updateFornecedor = (
+  id: string,
+  data: AtualizarFornecedorDto
+): Promise<ApiResponse<FornecedorDto>> => {
+  return apiClient.put(`/fornecedores/${id}`, data, {
+    successMessage: "Fornecedor atualizado com sucesso.",
+  })
+}
 
 /**
  * Exclui um Fornecedor pelo seu ID.
  */
 export const deleteFornecedor = (id: string): Promise<ApiResponse<void>> => {
-  return apiClient.delete(`/fornecedores/${id}`, { successMessage: 'Fornecedor excluído com sucesso.' });
-};
+  return apiClient.delete(`/fornecedores/${id}`, {
+    successMessage: "Fornecedor excluído com sucesso.",
+  })
+}

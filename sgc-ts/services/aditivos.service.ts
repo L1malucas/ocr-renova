@@ -44,3 +44,10 @@ export const createAditivo = (data: CriarAditivoDto): Promise<ApiResponse<Aditiv
 export const updateAditivo = (id: string, data: UpdateAmendmentDto): Promise<ApiResponse<void>> => {
   return apiClient.put(`/aditivos/${id}`, data, { successMessage: 'Aditivo atualizado com sucesso.' });
 };
+
+/**
+ * Exclui um aditivo pelo seu ID.
+ */
+export const deleteAditivo = (id: string): Promise<ApiResponse<void>> => {
+  return apiClient.delete(`/aditivos/${id}`, { successMessage: 'Aditivo excluído com sucesso.' });
+};

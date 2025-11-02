@@ -4,6 +4,7 @@ import {
   getAditivoById,
   createAditivo,
   updateAditivo,
+  deleteAditivo,
   ListAditivosParams,
 } from "@/services/aditivos.service"
 import { CriarAditivoDto, UpdateAmendmentDto } from "@/models/aditivo.model"
@@ -50,6 +51,16 @@ export const useUpdateAditivo = () => {
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: [ADITIVOS_QUERY_KEY] })
       queryClient.invalidateQueries({ queryKey: [ADITIVOS_QUERY_KEY, variables.id] })
+    },
+  })
+}
+
+export const useDeleteAditivo = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (id: string) => deleteAditivo(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [ADITIVOS_QUERY_KEY] })
     },
   })
 }

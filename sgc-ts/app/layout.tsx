@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/toaster"
 import { Suspense } from "react"
 import { QueryProvider } from "@/components/query-provider"
 import { AppLayout } from "@/components/layout/app-layout"
+import { DataPrefetcher } from "@/components/data-prefetcher"
 import "./globals.css"
 
 export const metadata: Metadata = {
@@ -27,6 +28,7 @@ export default function RootLayout({
         <Suspense fallback={null}>
           <AuthProvider>
             <QueryProvider>
+              <DataPrefetcher />
               <AppLayout>{children}</AppLayout>
               <Toaster />
             </QueryProvider>

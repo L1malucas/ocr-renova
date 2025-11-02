@@ -3,6 +3,7 @@ import {
   getPlanoTrabalhoByContratoId,
   createPlanoTrabalho,
   updatePlanoTrabalho,
+  deletePlanoTrabalho,
 } from "@/services/plano-trabalho.service"
 import { CriarPlanoTrabalhoDto, AtualizarPlanoTrabalhoDto } from "@/models/plano-trabalho.model"
 
@@ -33,6 +34,16 @@ export const useUpdatePlanoDeTrabalho = () => {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: AtualizarPlanoTrabalhoDto }) =>
       updatePlanoTrabalho(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [PLANO_TRABALHO_QUERY_KEY] })
+    },
+  })
+}
+
+export const useDeletePlanoTrabalho = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (id: string) => deletePlanoTrabalho(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [PLANO_TRABALHO_QUERY_KEY] })
     },

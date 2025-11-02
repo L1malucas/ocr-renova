@@ -1,16 +1,24 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import {
   getFornecedores,
+  getAllFornecedores,
   getFornecedorById,
   createFornecedor,
   updateFornecedor,
   deleteFornecedor,
   ListParams,
 } from "@/services/fornecedores.service"
-import { CriarFornecedorDto, AtualizarFornecedorDto } from "@/models/fornecedor.model"
+import {
+  CriarFornecedorDto,
+  AtualizarFornecedorDto,
+} from "@/models/fornecedor.model"
 
+// Chave principal para as queries de fornecedores
 const FORNECEDORES_QUERY_KEY = "fornecedores"
 
+/**
+ * Hook para buscar uma lista paginada de fornecedores.
+ */
 export const useGetFornecedores = (params: ListParams) => {
   return useQuery({
     queryKey: [FORNECEDORES_QUERY_KEY, params],
@@ -19,6 +27,20 @@ export const useGetFornecedores = (params: ListParams) => {
   })
 }
 
+/**
+ * Hook para buscar todos os fornecedores (sem paginação).
+ */
+export const useAllFornecedores = () => {
+  return useQuery({
+    queryKey: [FORNECEDORES_QUERY_KEY, "all"],
+    queryFn: () => getAllFornecedores(),
+    select: response => response.data,
+  })
+}
+
+/**
+ * Hook para buscar um único fornecedor pelo seu ID.
+ */
 export const useGetFornecedorById = (id: string | null) => {
   return useQuery({
     queryKey: [FORNECEDORES_QUERY_KEY, id],
@@ -27,8 +49,12 @@ export const useGetFornecedorById = (id: string | null) => {
   })
 }
 
+/**
+ * Hook para criar um novo fornecedor.
+ */
 export const useCreateFornecedor = () => {
   const queryClient = useQueryClient()
+
   return useMutation({
     mutationFn: (data: CriarFornecedorDto) => createFornecedor(data),
     onSuccess: () => {
@@ -37,20 +63,30 @@ export const useCreateFornecedor = () => {
   })
 }
 
+/**
+ * Hook para atualizar um fornecedor existente.
+ */
 export const useUpdateFornecedor = () => {
   const queryClient = useQueryClient()
+
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: AtualizarFornecedorDto }) =>
       updateFornecedor(id, data),
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: [FORNECEDORES_QUERY_KEY] })
-      queryClient.invalidateQueries({ queryKey: [FORNECEDORES_QUERY_KEY, variables.id] })
+      queryClient.invalidateQueries({
+        queryKey: [FORNECEDORES_QUERY_KEY, variables.id],
+      })
     },
   })
 }
 
+/**
+ * Hook para excluir um fornecedor.
+ */
 export const useDeleteFornecedor = () => {
   const queryClient = useQueryClient()
+
   return useMutation({
     mutationFn: (id: string) => deleteFornecedor(id),
     onSuccess: () => {
