@@ -1,14 +1,25 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import {
+  getTiposRecursos,
   getAnexosByRecurso,
   createAnexo,
   deleteAnexo,
   downloadAnexo,
   ListAnexosParams,
 } from "@/services/anexos.service"
-import { CreateAnexoParams } from "@/models/anexo.model"
+import { CriarAnexoDto } from "@/models/anexo.model"
 
 const ANEXOS_QUERY_KEY = "anexos"
+
+/**
+ * Hook para buscar os tipos de recursos disponíveis para anexos.
+ */
+export const useGetTiposRecursos = () => {
+  return useQuery({
+    queryKey: [ANEXOS_QUERY_KEY, "tipos-recursos"],
+    queryFn: () => getTiposRecursos(),
+  })
+}
 
 /**
  * Hook para buscar anexos de um recurso específico (ex: uma entrega, uma despesa).
@@ -31,11 +42,11 @@ export const useGetAnexosByRecurso = (
 export const useCreateAnexo = () => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (data: CreateAnexoParams) => createAnexo(data),
+    mutationFn: (data: CriarAnexoDto) => createAnexo(data),
     onSuccess: (_data, variables) => {
       // Invalida a query de anexos para o recurso específico para recarregar a lista
       queryClient.invalidateQueries({
-        queryKey: [ANEXOS_QUERY_KEY, variables.tipoProprietario, variables.proprietarioId],
+        queryKey: [ANEXOS_QUERY_KEY, variables.tipoRecurso, variables.recursoId],
       })
     },
   })

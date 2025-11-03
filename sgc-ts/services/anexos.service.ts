@@ -1,6 +1,6 @@
 import apiClient from '@/lib/api-client';
 import type { ApiResponse, PaginatedApiResponse } from '@/lib/types';
-import type { AnexoDto, CreateAnexoParams } from '@/models/anexo.model';
+import type { AnexoDto, CriarAnexoDto } from '@/models/anexo.model';
 
 // -----------------
 // Service Functions
@@ -15,6 +15,13 @@ export interface ListAnexosParams {
 }
 
 /**
+ * Busca a lista de tipos de recursos disponíveis para anexos.
+ */
+export const getTiposRecursos = (): Promise<ApiResponse<string[]>> => {
+  return apiClient.get('/anexos/tipos-recursos');
+};
+
+/**
  * Busca uma lista paginada de anexos para um recurso específico (ex: contrato, despesa).
  */
 export const getAnexosByRecurso = (
@@ -27,9 +34,20 @@ export const getAnexosByRecurso = (
 
 /**
  * Realiza o upload de um novo anexo.
+ * Os parâmetros são enviados como query params conforme a API.
  */
-export const createAnexo = ({ arquivo, ...data }: CreateAnexoParams): Promise<ApiResponse<AnexoDto>> => {
-  return apiClient.post('/anexos', data, {
+export const createAnexo = ({ arquivo, tipoRecurso, recursoId, descricao }: CriarAnexoDto): Promise<ApiResponse<AnexoDto>> => {
+  // Monta a URL com query params
+  const params = new URLSearchParams({
+    tipoRecurso,
+    recursoId,
+  });
+
+  if (descricao) {
+    params.append('descricao', descricao);
+  }
+
+  return apiClient.post(`/anexos?${params.toString()}`, null, {
     attachments: [arquivo],
     successMessage: 'Anexo enviado com sucesso.',
   });

@@ -1,0 +1,1239 @@
+[
+  {
+    "method": "GET",
+    "url": "/api/aditivos?pageNumber=1&pageSize=10",
+    "payload": {},
+    "response": {
+      "pageNumber": 1,
+      "pageSize": 10,
+      "totalPages": 0,
+      "totalItems": 0,
+      "success": true,
+      "data": [
+        {
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "numeroTermo": "string",
+          "objeto": "string",
+          "tipo": 0,
+          "valorAlteracao": 0,
+          "dataAssinatura": "2025-11-03T12:00:09.548Z",
+          "novoFimVigencia": "2025-11-03T12:00:09.548Z",
+          "contratoId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        }
+      ],
+      "messages": []
+    }
+  },
+  {
+    "method": "POST",
+    "url": "/api/aditivos",
+    "payload": {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "numeroTermo": "string",
+      "objeto": "string",
+      "tipo": 0,
+      "valorAlteracao": 0,
+      "dataAssinatura": "2025-11-03T12:00:09.548Z",
+      "novoFimVigencia": "2025-11-03T12:00:09.548Z",
+      "contratoId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+    },
+    "response": {
+      "success": true,
+      "data": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "numeroTermo": "string",
+        "objeto": "string",
+        "tipo": 0,
+        "valorAlteracao": 0,
+        "dataAssinatura": "2025-11-03T12:00:09.548Z",
+        "novoFimVigencia": "2025-11-03T12:00:09.548Z",
+        "contratoId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+      },
+      "messages": []
+    }
+  },
+  {
+    "method": "GET",
+    "url": "/api/aditivos/{id}",
+    "payload": {},
+    "response": {
+      "success": true,
+      "data": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "numeroTermo": "string",
+        "objeto": "string",
+        "tipo": 0,
+        "valorAlteracao": 0,
+        "dataAssinatura": "2025-11-03T12:00:09.548Z",
+        "novoFimVigencia": "2025-11-03T12:00:09.548Z",
+        "contratoId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+      },
+      "messages": []
+    }
+  },
+  {
+    "method": "PUT",
+    "url": "/api/aditivos/{id}",
+    "payload": {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "numeroTermo": "string",
+      "objeto": "string",
+      "tipo": 0,
+      "valorAlteracao": 0,
+      "dataAssinatura": "2025-11-03T12:00:09.548Z",
+      "novoFimVigencia": "2025-11-03T12:00:09.548Z",
+      "contratoId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+    },
+    "response": {}
+  },
+  {
+    "method": "DELETE",
+    "url": "/api/aditivos/{id}",
+    "payload": {},
+    "response": {}
+  },
+  {
+    "method": "GET",
+    "url": "/api/anexos/tipos-recursos",
+    "payload": {},
+    "response": {
+      "success": true,
+      "data": [
+        "string"
+      ],
+      "messages": []
+    }
+  },
+  {
+    "method": "GET",
+    "url": "/api/{recurso}/{recursoId}/anexos?pageNumber=1&pageSize=10",
+    "payload": {},
+    "response": {
+      "pageNumber": 1,
+      "pageSize": 10,
+      "totalPages": 0,
+      "totalItems": 0,
+      "success": true,
+      "data": [
+        {
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "nomeArquivo": "string",
+          "descricao": "string",
+          "mimeType": "string",
+          "tamanhoBytes": 0
+        }
+      ],
+      "messages": []
+    }
+  },
+  {
+    "method": "POST",
+    "url": "/api/anexos?tipoRecurso=string&recursoId=3fa85f64-5717-4562-b3fc-2c963f66afa6&descricao=string",
+    "payload": {
+      "arquivo": "binary"
+    },
+    "response": {
+      "success": true,
+      "data": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "nomeArquivo": "string",
+        "descricao": "string",
+        "mimeType": "string",
+        "tamanhoBytes": 0
+      },
+      "messages": []
+    }
+  },
+  {
+    "method": "GET",
+    "url": "/api/anexos/{id}/download",
+    "payload": {},
+    "response": {}
+  },
+  {
+    "method": "DELETE",
+    "url": "/api/anexos/{id}",
+    "payload": {},
+    "response": {}
+  },
+  {
+    "method": "GET",
+    "url": "/api/categories/linhas-orcamentarias?pageNumber=1&pageSize=10",
+    "payload": {},
+    "response": {
+      "pageNumber": 1,
+      "pageSize": 10,
+      "totalPages": 0,
+      "totalItems": 0,
+      "success": true,
+      "data": [
+        {
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "name": "string",
+          "code": "string",
+          "description": "string",
+          "parentCategoryId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "subcategories": []
+        }
+      ],
+      "messages": []
+    }
+  },
+  {
+    "method": "POST",
+    "url": "/api/categories/linhas-orcamentarias",
+    "payload": {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "name": "string",
+      "code": "string",
+      "description": "string",
+      "parentCategoryId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "subcategories": []
+    },
+    "response": {
+      "success": true,
+      "data": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "name": "string",
+        "code": "string",
+        "description": "string",
+        "parentCategoryId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "subcategories": []
+      },
+      "messages": []
+    }
+  },
+  {
+    "method": "GET",
+    "url": "/api/categories/despesas?pageNumber=1&pageSize=10",
+    "payload": {},
+    "response": {
+      "pageNumber": 1,
+      "pageSize": 10,
+      "totalPages": 0,
+      "totalItems": 0,
+      "success": true,
+      "data": [
+        {
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "name": "string",
+          "code": "string",
+          "description": "string",
+          "parentCategoryId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "subcategories": []
+        }
+      ],
+      "messages": []
+    }
+  },
+  {
+    "method": "POST",
+    "url": "/api/categories/despesas",
+    "payload": {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "name": "string",
+      "code": "string",
+      "description": "string",
+      "parentCategoryId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "subcategories": []
+    },
+    "response": {
+      "success": true,
+      "data": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "name": "string",
+        "code": "string",
+        "description": "string",
+        "parentCategoryId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "subcategories": []
+      },
+      "messages": []
+    }
+  },
+  {
+    "method": "PUT",
+    "url": "/api/categories/{type}/{id}",
+    "payload": {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "name": "string",
+      "code": "string",
+      "description": "string",
+      "parentCategoryId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "subcategories": []
+    },
+    "response": {}
+  },
+  {
+    "method": "DELETE",
+    "url": "/api/categories/{type}/{id}",
+    "payload": {},
+    "response": {}
+  },
+  {
+    "method": "GET",
+    "url": "/api/contratos?pageNumber=1&pageSize=10",
+    "payload": {},
+    "response": {
+      "pageNumber": 1,
+      "pageSize": 10,
+      "totalPages": 0,
+      "totalItems": 0,
+      "success": true,
+      "data": [
+        {
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "nome": "string",
+          "numeroInstrumento": "string",
+          "financiador": "string",
+          "objeto": "string",
+          "dataAssinatura": "2025-11-03T12:00:09.548Z",
+          "inicioVigencia": "2025-11-03T12:00:09.548Z",
+          "fimVigencia": "2025-11-03T12:00:09.548Z",
+          "valorOriginal": 0,
+          "valorAtualizado": 0,
+          "valorExecutado": 0,
+          "unidadeId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        }
+      ],
+      "messages": []
+    }
+  },
+  {
+    "method": "POST",
+    "url": "/api/contratos",
+    "payload": {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "nome": "string",
+      "numeroInstrumento": "string",
+      "financiador": "string",
+      "objeto": "string",
+      "dataAssinatura": "2025-11-03T12:00:09.548Z",
+      "inicioVigencia": "2025-11-03T12:00:09.548Z",
+      "fimVigencia": "2025-11-03T12:00:09.548Z",
+      "valorOriginal": 0,
+      "valorAtualizado": 0,
+      "valorExecutado": 0,
+      "unidadeId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+    },
+    "response": {
+      "success": true,
+      "data": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "nome": "string",
+        "numeroInstrumento": "string",
+        "financiador": "string",
+        "objeto": "string",
+        "dataAssinatura": "2025-11-03T12:00:09.548Z",
+        "inicioVigencia": "2025-11-03T12:00:09.548Z",
+        "fimVigencia": "2025-11-03T12:00:09.548Z",
+        "valorOriginal": 0,
+        "valorAtualizado": 0,
+        "valorExecutado": 0,
+        "unidadeId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+      },
+      "messages": []
+    }
+  },
+  {
+    "method": "GET",
+    "url": "/api/contratos/{id}",
+    "payload": {},
+    "response": {
+      "success": true,
+      "data": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "nome": "string",
+        "numeroInstrumento": "string",
+        "financiador": "string",
+        "objeto": "string",
+        "dataAssinatura": "2025-11-03T12:00:09.548Z",
+        "inicioVigencia": "2025-11-03T12:00:09.548Z",
+        "fimVigencia": "2025-11-03T12:00:09.548Z",
+        "valorOriginal": 0,
+        "valorAtualizado": 0,
+        "valorExecutado": 0,
+        "unidadeId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+      },
+      "messages": []
+    }
+  },
+  {
+    "method": "PUT",
+    "url": "/api/contratos/{id}",
+    "payload": {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "nome": "string",
+      "numeroInstrumento": "string",
+      "financiador": "string",
+      "objeto": "string",
+      "dataAssinatura": "2025-11-03T12:00:09.548Z",
+      "inicioVigencia": "2025-11-03T12:00:09.548Z",
+      "fimVigencia": "2025-11-03T12:00:09.548Z",
+      "valorOriginal": 0,
+      "valorAtualizado": 0,
+      "valorExecutado": 0,
+      "unidadeId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+    },
+    "response": {}
+  },
+  {
+    "method": "DELETE",
+    "url": "/api/contratos/{id}",
+    "payload": {},
+    "response": {}
+  },
+  {
+    "method": "GET",
+    "url": "/api/despesas?pageNumber=1&pageSize=10",
+    "payload": {},
+    "response": {
+      "pageNumber": 1,
+      "pageSize": 10,
+      "totalPages": 0,
+      "totalItems": 0,
+      "success": true,
+      "data": [
+        {
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "descricao": "string",
+          "valor": 0,
+          "dataDespesa": "2025-11-03T12:00:09.548Z",
+          "linhaOrcamentariaId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "fornecedorId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "categoriaId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "estaPaga": true,
+          "foraDoOrcamento": true,
+          "justificativa": "string"
+        }
+      ],
+      "messages": []
+    }
+  },
+  {
+    "method": "POST",
+    "url": "/api/despesas",
+    "payload": {
+      "descricao": "string",
+      "valor": 0,
+      "dataDespesa": "2025-11-03T12:00:09.548Z",
+      "estaPaga": true,
+      "linhaOrcamentariaId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "fornecedorId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "nomeFornecedor": "string"
+    },
+    "response": {
+      "success": true,
+      "data": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "descricao": "string",
+        "valor": 0,
+        "dataDespesa": "2025-11-03T12:00:09.548Z",
+        "linhaOrcamentariaId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "fornecedorId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "categoriaId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "estaPaga": true,
+        "foraDoOrcamento": true,
+        "justificativa": "string"
+      },
+      "messages": []
+    }
+  },
+  {
+    "method": "GET",
+    "url": "/api/despesas/{id}",
+    "payload": {},
+    "response": {
+      "success": true,
+      "data": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "descricao": "string",
+        "valor": 0,
+        "dataDespesa": "2025-11-03T12:00:09.548Z",
+        "linhaOrcamentariaId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "fornecedorId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "categoriaId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "estaPaga": true,
+        "foraDoOrcamento": true,
+        "justificativa": "string"
+      },
+      "messages": []
+    }
+  },
+  {
+    "method": "DELETE",
+    "url": "/api/despesas/{id}",
+    "payload": {},
+    "response": {}
+  },
+  {
+    "method": "POST",
+    "url": "/api/despesas/list",
+    "payload": [
+      {
+        "descricao": "string",
+        "valor": 0,
+        "dataDespesa": "2025-11-03T12:00:09.548Z",
+        "estaPaga": true,
+        "linhaOrcamentariaId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "fornecedorId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "nomeFornecedor": "string"
+      }
+    ],
+    "response": {
+      "success": true,
+      "data": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "descricao": "string",
+        "valor": 0,
+        "dataDespesa": "2025-11-03T12:00:09.548Z",
+        "linhaOrcamentariaId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "fornecedorId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "categoriaId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "estaPaga": true,
+        "foraDoOrcamento": true,
+        "justificativa": "string"
+      },
+      "messages": []
+    }
+  },
+  {
+    "method": "GET",
+    "url": "/api/itens-plano-trabalho/{itemId}/execucoes?pageNumber=1&pageSize=10",
+    "payload": {},
+    "response": {
+      "pageNumber": 1,
+      "pageSize": 10,
+      "totalPages": 0,
+      "totalItems": 0,
+      "success": true,
+      "data": [
+        {
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "itemPlanoTrabalhoId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "valor": 0,
+          "dataExecucao": "2025-11-03T12:00:09.548Z",
+          "usuarioExecutorId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "observacao": "string"
+        }
+      ],
+      "messages": []
+    }
+  },
+  {
+    "method": "POST",
+    "url": "/api/itens-plano-trabalho/{itemId}/execucoes",
+    "payload": {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "itemPlanoTrabalhoId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "valor": 0,
+      "dataExecucao": "2025-11-03T12:00:09.548Z",
+      "usuarioExecutorId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "observacao": "string"
+    },
+    "response": {
+      "success": true,
+      "data": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "itemPlanoTrabalhoId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "valor": 0,
+        "dataExecucao": "2025-11-03T12:00:09.548Z",
+        "usuarioExecutorId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "observacao": "string"
+      },
+      "messages": []
+    }
+  },
+  {
+    "method": "PUT",
+    "url": "/api/itens-plano-trabalho/{itemId}/execucoes/{execucaoId}",
+    "payload": {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "itemPlanoTrabalhoId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "valor": 0,
+      "dataExecucao": "2025-11-03T12:00:09.548Z",
+      "usuarioExecutorId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "observacao": "string"
+    },
+    "response": {}
+  },
+  {
+    "method": "DELETE",
+    "url": "/api/itens-plano-trabalho/{itemId}/execucoes/{execucaoId}",
+    "payload": {},
+    "response": {}
+  },
+  {
+    "method": "GET",
+    "url": "/api/fonte-recurso?pageNumber=1&pageSize=10",
+    "payload": {},
+    "response": {
+      "pageNumber": 1,
+      "pageSize": 10,
+      "totalPages": 0,
+      "totalItems": 0,
+      "success": true,
+      "data": [
+        {
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "nome": "string",
+          "descricao": "string"
+        }
+      ],
+      "messages": []
+    }
+  },
+  {
+    "method": "POST",
+    "url": "/api/fonte-recurso",
+    "payload": {
+      "nome": "string",
+      "descricao": "string"
+    },
+    "response": {
+      "success": true,
+      "data": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "nome": "string",
+        "descricao": "string"
+      },
+      "messages": []
+    }
+  },
+  {
+    "method": "GET",
+    "url": "/api/fonte-recurso/{id}",
+    "payload": {},
+    "response": {
+      "success": true,
+      "data": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "nome": "string",
+        "descricao": "string"
+      },
+      "messages": []
+    }
+  },
+  {
+    "method": "PUT",
+    "url": "/api/fonte-recurso/{id}",
+    "payload": {
+      "nome": "string",
+      "descricao": "string"
+    },
+    "response": {}
+  },
+  {
+    "method": "DELETE",
+    "url": "/api/fonte-recurso/{id}",
+    "payload": {},
+    "response": {}
+  },
+  {
+    "method": "GET",
+    "url": "/api/fornecedores?pageNumber=1&pageSize=10",
+    "payload": {},
+    "response": {
+      "pageNumber": 1,
+      "pageSize": 10,
+      "totalPages": 0,
+      "totalItems": 0,
+      "success": true,
+      "data": [
+        {
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "nome": "string",
+          "nomeFantasia": "string",
+          "cnpj": "string",
+          "inscricaoEstadual": "string",
+          "email": "string",
+          "telefone": "string",
+          "pessoaContato": "string",
+          "rua": "string",
+          "numero": "string",
+          "complemento": "string",
+          "bairro": "string",
+          "cidade": "string",
+          "estado": "string",
+          "cep": "string"
+        }
+      ],
+      "messages": []
+    }
+  },
+  {
+    "method": "POST",
+    "url": "/api/fornecedores",
+    "payload": {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "nome": "string",
+      "nomeFantasia": "string",
+      "cnpj": "string",
+      "inscricaoEstadual": "string",
+      "email": "string",
+      "telefone": "string",
+      "pessoaContato": "string",
+      "rua": "string",
+      "numero": "string",
+      "complemento": "string",
+      "bairro": "string",
+      "cidade": "string",
+      "estado": "string",
+      "cep": "string"
+    },
+    "response": {
+      "success": true,
+      "data": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "nome": "string",
+        "nomeFantasia": "string",
+        "cnpj": "string",
+        "inscricaoEstadual": "string",
+        "email": "string",
+        "telefone": "string",
+        "pessoaContato": "string",
+        "rua": "string",
+        "numero": "string",
+        "complemento": "string",
+        "bairro": "string",
+        "cidade": "string",
+        "estado": "string",
+        "cep": "string"
+      },
+      "messages": []
+    }
+  },
+  {
+    "method": "GET",
+    "url": "/api/fornecedores/{id}",
+    "payload": {},
+    "response": {
+      "success": true,
+      "data": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "nome": "string",
+        "nomeFantasia": "string",
+        "cnpj": "string",
+        "inscricaoEstadual": "string",
+        "email": "string",
+        "telefone": "string",
+        "pessoaContato": "string",
+        "rua": "string",
+        "numero": "string",
+        "complemento": "string",
+        "bairro": "string",
+        "cidade": "string",
+        "estado": "string",
+        "cep": "string"
+      },
+      "messages": []
+    }
+  },
+  {
+    "method": "PUT",
+    "url": "/api/fornecedores/{id}",
+    "payload": {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "nome": "string",
+      "nomeFantasia": "string",
+      "cnpj": "string",
+      "inscricaoEstadual": "string",
+      "email": "string",
+      "telefone": "string",
+      "pessoaContato": "string",
+      "rua": "string",
+      "numero": "string",
+      "complemento": "string",
+      "bairro": "string",
+      "cidade": "string",
+      "estado": "string",
+      "cep": "string"
+    },
+    "response": {}
+  },
+  {
+    "method": "DELETE",
+    "url": "/api/fornecedores/{id}",
+    "payload": {},
+    "response": {}
+  },
+  {
+    "method": "POST",
+    "url": "/api/planos-trabalho/{planoTrabalhoId}/itens",
+    "payload": {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "objetivo": "string",
+      "acao": "string",
+      "descricao": "string",
+      "valorMeta": 0,
+      "tipoMetrica": 0,
+      "unidadeMedida": "string",
+      "frequencia": 0,
+      "obrigatorio": true,
+      "dataInicio": "2025-11-03T12:00:09.548Z",
+      "dataFim": "2025-11-03T12:00:09.548Z",
+      "itemPaiId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "planoTrabalhoId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "categoriaId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+    },
+    "response": {
+      "success": true,
+      "data": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "objetivo": "string",
+        "acao": "string",
+        "descricao": "string",
+        "valorMeta": 0,
+        "tipoMetrica": 0,
+        "unidadeMedida": "string",
+        "frequencia": 0,
+        "obrigatorio": true,
+        "dataInicio": "2025-11-03T12:00:09.548Z",
+        "dataFim": "2025-11-03T12:00:09.548Z",
+        "itemPaiId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "planoTrabalhoId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "categoriaId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+      },
+      "messages": []
+    }
+  },
+  {
+    "method": "PUT",
+    "url": "/api/planos-trabalho/{planoTrabalhoId}/itens/{itemId}",
+    "payload": {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "objetivo": "string",
+      "acao": "string",
+      "descricao": "string",
+      "valorMeta": 0,
+      "tipoMetrica": 0,
+      "unidadeMedida": "string",
+      "frequencia": 0,
+      "obrigatorio": true,
+      "dataInicio": "2025-11-03T12:00:09.548Z",
+      "dataFim": "2025-11-03T12:00:09.548Z",
+      "itemPaiId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "planoTrabalhoId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "categoriaId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+    },
+    "response": {}
+  },
+  {
+    "method": "DELETE",
+    "url": "/api/planos-trabalho/{planoTrabalhoId}/itens/{itemId}",
+    "payload": {},
+    "response": {}
+  },
+  {
+    "method": "GET",
+    "url": "/api/linhas-orcamentarias/{linhaId}",
+    "payload": {},
+    "response": {
+      "success": true,
+      "data": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "orcamentoId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "nomeItem": "string",
+        "descricao": "string",
+        "quantidade": 0,
+        "valorUnitario": 0,
+        "unidadeMedida": "string",
+        "valorTotal": 0,
+        "categoriaId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+      },
+      "messages": []
+    }
+  },
+  {
+    "method": "PUT",
+    "url": "/api/linhas-orcamentarias/{linhaId}",
+    "payload": {
+      "nomeItem": "string",
+      "descricao": "string",
+      "quantidade": 0,
+      "valorUnitario": 0,
+      "unidadeMedida": "string",
+      "categoriaId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+    },
+    "response": {}
+  },
+  {
+    "method": "DELETE",
+    "url": "/api/linhas-orcamentarias/{linhaId}",
+    "payload": {},
+    "response": {}
+  },
+  {
+    "method": "POST",
+    "url": "/api/orcamentos/{orcamentoId}/linhas",
+    "payload": {
+      "orcamentoId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "nomeItem": "string",
+      "descricao": "string",
+      "quantidade": 0,
+      "valorUnitario": 0,
+      "unidadeMedida": "string",
+      "categoriaId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+    },
+    "response": {
+      "success": true,
+      "data": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "orcamentoId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "nomeItem": "string",
+        "descricao": "string",
+        "quantidade": 0,
+        "valorUnitario": 0,
+        "unidadeMedida": "string",
+        "valorTotal": 0,
+        "categoriaId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+      },
+      "messages": []
+    }
+  },
+  {
+    "method": "GET",
+    "url": "/api/contratos/{contratoId}/orcamento",
+    "payload": {},
+    "response": {
+      "success": true,
+      "data": {
+        "nome": "string",
+        "descricao": "string",
+        "versao": 0,
+        "contratoId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+      },
+      "messages": []
+    }
+  },
+  {
+    "method": "GET",
+    "url": "/api/orcamentos/{id}",
+    "payload": {},
+    "response": {
+      "success": true,
+      "data": {
+        "nome": "string",
+        "descricao": "string",
+        "versao": 0,
+        "contratoId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+      },
+      "messages": []
+    }
+  },
+  {
+    "method": "PUT",
+    "url": "/api/orcamentos/{id}",
+    "payload": {
+      "nome": "string",
+      "descricao": "string",
+      "versao": 0,
+      "contratoId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+    },
+    "response": {}
+  },
+  {
+    "method": "DELETE",
+    "url": "/api/orcamentos/{id}",
+    "payload": {},
+    "response": {}
+  },
+  {
+    "method": "GET",
+    "url": "/api/organizacoes-sociais?pageNumber=1&pageSize=10",
+    "payload": {},
+    "response": {
+      "pageNumber": 1,
+      "pageSize": 10,
+      "totalPages": 0,
+      "totalItems": 0,
+      "success": true,
+      "data": [
+        {
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "razaoSocial": "string",
+          "nomeFantasia": "string",
+          "cnpj": "string",
+          "inscricaoEstadual": "string",
+          "inscricaoMunicipal": "string",
+          "telefonePrincipal": "string",
+          "emailPrincipal": "string"
+        }
+      ],
+      "messages": []
+    }
+  },
+  {
+    "method": "POST",
+    "url": "/api/organizacoes-sociais",
+    "payload": {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "razaoSocial": "string",
+      "nomeFantasia": "string",
+      "cnpj": "string",
+      "inscricaoEstadual": "string",
+      "inscricaoMunicipal": "string",
+      "telefonePrincipal": "string",
+      "emailPrincipal": "string"
+    },
+    "response": {
+      "success": true,
+      "data": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "razaoSocial": "string",
+        "nomeFantasia": "string",
+        "cnpj": "string",
+        "inscricaoEstadual": "string",
+        "inscricaoMunicipal": "string",
+        "telefonePrincipal": "string",
+        "emailPrincipal": "string"
+      },
+      "messages": []
+    }
+  },
+  {
+    "method": "GET",
+    "url": "/api/organizacoes-sociais/{id}",
+    "payload": {},
+    "response": {
+      "success": true,
+      "data": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "razaoSocial": "string",
+        "nomeFantasia": "string",
+        "cnpj": "string",
+        "inscricaoEstadual": "string",
+        "inscricaoMunicipal": "string",
+        "telefonePrincipal": "string",
+        "emailPrincipal": "string"
+      },
+      "messages": []
+    }
+  },
+  {
+    "method": "PUT",
+    "url": "/api/organizacoes-sociais/{id}",
+    "payload": {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "razaoSocial": "string",
+      "nomeFantasia": "string",
+      "cnpj": "string",
+      "inscricaoEstadual": "string",
+      "inscricaoMunicipal": "string",
+      "telefonePrincipal": "string",
+      "emailPrincipal": "string"
+    },
+    "response": {}
+  },
+  {
+    "method": "DELETE",
+    "url": "/api/organizacoes-sociais/{id}",
+    "payload": {},
+    "response": {}
+  },
+  {
+    "method": "GET",
+    "url": "/api/contratos/{contratoId}/plano-trabalho",
+    "payload": {},
+    "response": {
+      "success": true,
+      "data": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "contratoId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "itens": []
+      },
+      "messages": []
+    }
+  },
+  {
+    "method": "POST",
+    "url": "/api/planos-trabalho",
+    "payload": {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "contratoId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "itens": []
+    },
+    "response": {
+      "success": true,
+      "data": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "contratoId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "itens": []
+      },
+      "messages": []
+    }
+  },
+  {
+    "method": "GET",
+    "url": "/api/receitas?pageNumber=1&pageSize=10",
+    "payload": {},
+    "response": {
+      "pageNumber": 1,
+      "pageSize": 10,
+      "totalPages": 0,
+      "totalItems": 0,
+      "success": true,
+      "data": [
+        {
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "descricao": "string",
+          "valor": 0,
+          "dataRecebimento": "2025-11-03T12:00:09.548Z",
+          "fonteRecursoId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "categoriaId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "observacoes": "string"
+        }
+      ],
+      "messages": []
+    }
+  },
+  {
+    "method": "POST",
+    "url": "/api/receitas",
+    "payload": {
+      "descricao": "string",
+      "valor": 0,
+      "dataRecebimento": "2025-11-03T12:00:09.548Z",
+      "fonteRecursoId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "categoriaId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "observacoes": "string"
+    },
+    "response": {
+      "success": true,
+      "data": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "descricao": "string",
+        "valor": 0,
+        "dataRecebimento": "2025-11-03T12:00:09.548Z",
+        "fonteRecursoId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "categoriaId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "observacoes": "string"
+      },
+      "messages": []
+    }
+  },
+  {
+    "method": "GET",
+    "url": "/api/receitas/{id}",
+    "payload": {},
+    "response": {
+      "success": true,
+      "data": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "descricao": "string",
+        "valor": 0,
+        "dataRecebimento": "2025-11-03T12:00:09.548Z",
+        "fonteRecursoId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "categoriaId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "observacoes": "string"
+      },
+      "messages": []
+    }
+  },
+  {
+    "method": "PUT",
+    "url": "/api/receitas/{id}",
+    "payload": {
+      "descricao": "string",
+      "valor": 0,
+      "dataRecebimento": "2025-11-03T12:00:09.548Z",
+      "fonteRecursoId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "categoriaId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "observacoes": "string"
+    },
+    "response": {}
+  },
+  {
+    "method": "DELETE",
+    "url": "/api/receitas/{id}",
+    "payload": {},
+    "response": {}
+  },
+  {
+    "method": "GET",
+    "url": "/api/unidades?pageNumber=1&pageSize=10",
+    "payload": {},
+    "response": {
+      "pageNumber": 1,
+      "pageSize": 10,
+      "totalPages": 0,
+      "totalItems": 0,
+      "success": true,
+      "data": [
+        {
+          "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+          "nome": "string",
+          "cnpj": "string",
+          "codigoCnes": "string",
+          "telefonePrincipal": "string",
+          "emailPrincipal": "string",
+          "organizacaoSocialId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+        }
+      ],
+      "messages": []
+    }
+  },
+  {
+    "method": "POST",
+    "url": "/api/unidades",
+    "payload": {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "nome": "string",
+      "cnpj": "string",
+      "codigoCnes": "string",
+      "telefonePrincipal": "string",
+      "emailPrincipal": "string",
+      "organizacaoSocialId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+    },
+    "response": {
+      "success": true,
+      "data": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "nome": "string",
+        "cnpj": "string",
+        "codigoCnes": "string",
+        "telefonePrincipal": "string",
+        "emailPrincipal": "string",
+        "organizacaoSocialId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+      },
+      "messages": []
+    }
+  },
+  {
+    "method": "GET",
+    "url": "/api/unidades/{id}",
+    "payload": {},
+    "response": {
+      "success": true,
+      "data": {
+        "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "nome": "string",
+        "cnpj": "string",
+        "codigoCnes": "string",
+        "telefonePrincipal": "string",
+        "emailPrincipal": "string",
+        "organizacaoSocialId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+      },
+      "messages": []
+    }
+  },
+  {
+    "method": "PUT",
+    "url": "/api/unidades/{id}",
+    "payload": {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "nome": "string",
+      "cnpj": "string",
+      "codigoCnes": "string",
+      "telefonePrincipal": "string",
+      "emailPrincipal": "string",
+      "organizacaoSocialId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+    },
+    "response": {}
+  },
+  {
+    "method": "DELETE",
+    "url": "/api/unidades/{id}",
+    "payload": {},
+    "response": {}
+  }
+]

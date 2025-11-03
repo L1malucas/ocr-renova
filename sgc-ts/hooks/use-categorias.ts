@@ -1,7 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import {
   getCategorias,
-  getCategoriaById,
   createCategoria,
   updateCategoria,
   deleteCategoria,
@@ -16,24 +15,16 @@ import {
 const CATEGORIAS_QUERY_KEY = "categorias"
 
 /**
- * Hook para buscar uma lista paginada de categorias.
+ * Hook para buscar uma lista paginada de categorias por tipo.
  */
-export const useGetCategorias = (params: ListParams) => {
+export const useGetCategorias = (
+  type: 'linhas-orcamentarias' | 'despesas',
+  params: ListParams
+) => {
   return useQuery({
-    queryKey: [CATEGORIAS_QUERY_KEY, params],
-    queryFn: () => getCategorias(params),
+    queryKey: [CATEGORIAS_QUERY_KEY, type, params],
+    queryFn: () => getCategorias(type, params),
     keepPreviousData: true,
-  })
-}
-
-/**
- * Hook para buscar uma única categoria pelo seu ID.
- */
-export const useGetCategoriaById = (id: string | null) => {
-  return useQuery({
-    queryKey: [CATEGORIAS_QUERY_KEY, id],
-    queryFn: () => getCategoriaById(id!),
-    enabled: !!id,
   })
 }
 
@@ -44,9 +35,10 @@ export const useCreateCategoria = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (data: CriarCategoriaDto) => createCategoria(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [CATEGORIAS_QUERY_KEY] })
+    mutationFn: ({ type, data }: { type: 'linhas-orcamentarias' | 'despesas'; data: CriarCategoriaDto }) =>
+      createCategoria(type, data),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: [CATEGORIAS_QUERY_KEY, variables.type] })
     },
   })
 }
@@ -58,13 +50,10 @@ export const useUpdateCategoria = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: AtualizarCategoriaDto }) =>
-      updateCategoria(id, data),
+    mutationFn: ({ type, id, data }: { type: 'linhas-orcamentarias' | 'despesas'; id: string; data: AtualizarCategoriaDto }) =>
+      updateCategoria(type, id, data),
     onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({ queryKey: [CATEGORIAS_QUERY_KEY] })
-      queryClient.invalidateQueries({
-        queryKey: [CATEGORIAS_QUERY_KEY, variables.id],
-      })
+      queryClient.invalidateQueries({ queryKey: [CATEGORIAS_QUERY_KEY, variables.type] })
     },
   })
 }
@@ -76,9 +65,10 @@ export const useDeleteCategoria = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (id: string) => deleteCategoria(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [CATEGORIAS_QUERY_KEY] })
+    mutationFn: ({ type, id }: { type: 'linhas-orcamentarias' | 'despesas'; id: string }) =>
+      deleteCategoria(type, id),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: [CATEGORIAS_QUERY_KEY, variables.type] })
     },
   })
 }

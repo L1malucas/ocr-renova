@@ -1,13 +1,13 @@
 import apiClient from '@/lib/api-client';
 import type { ApiResponse, PaginatedApiResponse } from '@/lib/types';
-import type { AditivoDto, CriarAditivoDto, UpdateAmendmentDto } from '@/models/aditivo.model';
+import type { AditivoDto, CriarAditivoDto, AtualizarAditivoDto } from '@/models/aditivo.model';
 
 // -----------------
 // Service Functions
 // -----------------
 
 /**
- * Parâmetros para a listagem de aditivos de um contrato.
+ * Parâmetros para a listagem de aditivos.
  */
 export interface ListAditivosParams {
   pageNumber?: number;
@@ -15,13 +15,12 @@ export interface ListAditivosParams {
 }
 
 /**
- * Busca uma lista paginada de aditivos para um contrato específico.
+ * Busca uma lista paginada de aditivos.
  */
-export const getAditivosByContrato = (
-  contratoId: string,
+export const getAditivos = (
   params: ListAditivosParams
 ): Promise<PaginatedApiResponse<AditivoDto[]>> => {
-  return apiClient.getPaginated(`/contratos/${contratoId}/aditivos`, { params });
+  return apiClient.getPaginated('/aditivos', { params });
 };
 
 /**
@@ -41,7 +40,7 @@ export const createAditivo = (data: CriarAditivoDto): Promise<ApiResponse<Aditiv
 /**
  * Atualiza um aditivo existente.
  */
-export const updateAditivo = (id: string, data: UpdateAmendmentDto): Promise<ApiResponse<void>> => {
+export const updateAditivo = (id: string, data: AtualizarAditivoDto): Promise<ApiResponse<void>> => {
   return apiClient.put(`/aditivos/${id}`, data, { successMessage: 'Aditivo atualizado com sucesso.' });
 };
 

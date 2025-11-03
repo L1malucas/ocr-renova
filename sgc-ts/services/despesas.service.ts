@@ -1,6 +1,6 @@
 import apiClient from '@/lib/api-client';
 import type { ApiResponse, PaginatedApiResponse } from '@/lib/types';
-import type { DespesaDto, CriarDespesaDto, AtualizarDespesaDto } from '@/models/despesa.model';
+import type { DespesaDto, CriarDespesaDto } from '@/models/despesa.model';
 
 // -----------------
 // Service Functions
@@ -34,10 +34,10 @@ export const createDespesa = (data: CriarDespesaDto): Promise<ApiResponse<Despes
 };
 
 /**
- * Atualiza uma Despesa existente.
+ * Cria múltiplas Despesas de uma vez.
  */
-export const updateDespesa = (id: string, data: AtualizarDespesaDto): Promise<ApiResponse<DespesaDto>> => {
-  return apiClient.put(`/despesas/${id}`, data, { successMessage: "Despesa atualizada com sucesso." });
+export const createDespesaList = (data: CriarDespesaDto[]): Promise<ApiResponse<DespesaDto>> => {
+  return apiClient.post("/despesas/list", data, { successMessage: "Despesas criadas com sucesso." });
 };
 
 /**

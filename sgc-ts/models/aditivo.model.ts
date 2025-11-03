@@ -19,11 +19,10 @@ export interface AditivoDto {
   id: string;
   numeroTermo: string | null;
   objeto: string | null;
-  tipo: string | null; // Padronizado como string para consistência.
+  tipo: number; // 0, 1, 2 ou 3 conforme AditivoType
   valorAlteracao: number;
   dataAssinatura: string; // ISO date-time string
   novoFimVigencia: string | null; // ISO date-time string
-  status: string | null;
   contratoId: string;
 }
 
@@ -42,11 +41,16 @@ export interface CriarAditivoDto {
 
 /**
  * DTO para a atualização de um Aditivo.
- * OBS: O campo 'subject' foi interpretado como 'objeto' para manter consistência.
  */
-export interface UpdateAmendmentDto {
+export interface AtualizarAditivoDto {
+  id: string;
+  numeroTermo: string;
   objeto: string;
-  newEndTerm?: string | null;
+  tipo: number;
+  valorAlteracao: number;
+  dataAssinatura: string;
+  novoFimVigencia: string | null;
+  contratoId: string;
 }
 
 export const CriarAditivoSchema = z.object({
@@ -62,14 +66,16 @@ export const CriarAditivoSchema = z.object({
 export interface AditivoListDto {
   id: string;
   numeroTermo: string | null;
-  tipo: string | null;
+  objeto: string | null;
+  tipo: number;
   valorAlteracao: number;
-  status: string | null;
+  dataAssinatura: string;
 }
 
 export const AditivoListSchema = z.object({
   numeroTermo: z.string(),
-  tipo: z.string(),
+  objeto: z.string(),
+  tipo: z.number(),
   valorAlteracao: z.number(),
-  status: z.string(),
+  dataAssinatura: z.string(),
 });

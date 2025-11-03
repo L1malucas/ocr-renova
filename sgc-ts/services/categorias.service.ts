@@ -17,51 +17,52 @@ export interface ListParams {
 }
 
 /**
- * Busca uma lista paginada de Categorias.
+ * Busca uma lista paginada de Categorias por tipo.
+ * @param type - Tipo da categoria: "linhas-orcamentarias" ou "despesas"
  */
 export const getCategorias = (
+  type: 'linhas-orcamentarias' | 'despesas',
   params: ListParams
 ): Promise<PaginatedApiResponse<CategoriaDto[]>> => {
-  return apiClient.getPaginated("/categories/despesas", { params })
-}
-// curl -X 'GET' \
-//   'https://cpg-caduceu-prestacao-api.onrender.com/api/categories/despesas?pageNumber=1&pageSize=10' \
-//   -H 'accept: application/json'
-/**
- * Busca uma Categoria pelo seu ID.
- */
-export const getCategoriaById = (id: string): Promise<ApiResponse<CategoriaDto>> => {
-  return apiClient.get(`/categories/despesas/${id}`)
+  return apiClient.getPaginated(`/categories/${type}`, { params })
 }
 
 /**
  * Cria uma nova Categoria.
+ * @param type - Tipo da categoria: "linhas-orcamentarias" ou "despesas"
  */
 export const createCategoria = (
+  type: 'linhas-orcamentarias' | 'despesas',
   data: CriarCategoriaDto
 ): Promise<ApiResponse<CategoriaDto>> => {
-  return apiClient.post("/categories/despesas", data, {
+  return apiClient.post(`/categories/${type}`, data, {
     successMessage: "Categoria criada com sucesso.",
   })
 }
 
 /**
  * Atualiza uma Categoria existente.
+ * @param type - Tipo da categoria: "linhas-orcamentarias" ou "despesas"
  */
 export const updateCategoria = (
+  type: 'linhas-orcamentarias' | 'despesas',
   id: string,
   data: AtualizarCategoriaDto
-): Promise<ApiResponse<CategoriaDto>> => {
-  return apiClient.put(`/categories/despesas/${id}`, data, {
+): Promise<ApiResponse<void>> => {
+  return apiClient.put(`/categories/${type}/${id}`, data, {
     successMessage: "Categoria atualizada com sucesso.",
   })
 }
 
 /**
  * Exclui uma Categoria pelo seu ID.
+ * @param type - Tipo da categoria: "linhas-orcamentarias" ou "despesas"
  */
-export const deleteCategoria = (id: string): Promise<ApiResponse<void>> => {
-  return apiClient.delete(`/categories/despesas/${id}`, {
+export const deleteCategoria = (
+  type: 'linhas-orcamentarias' | 'despesas',
+  id: string
+): Promise<ApiResponse<void>> => {
+  return apiClient.delete(`/categories/${type}/${id}`, {
     successMessage: "Categoria excluída com sucesso.",
   })
 }

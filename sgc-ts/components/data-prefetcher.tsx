@@ -4,7 +4,7 @@ import { useEffect } from "react"
 import { useCache } from "@/hooks/use-cache"
 import { useGetFornecedores } from "@/hooks/use-fornecedores"
 import { useGetLinhasOrcamentarias } from "@/hooks/use-linhas-orcamentarias"
-import { useGetCategorias } from "@/hooks/use-categorias"
+// import { useGetCategorias } from "@/hooks/use-categorias" // REMOVIDO: endpoint /categories/despesas não existe no backend
 import { useGetFontesRecurso } from "@/hooks/use-fonte-recurso"
 import { useGetOrganizacoesSociais } from "@/hooks/use-organizacoes-sociais"
 import { useGetReceitas } from "@/hooks/use-receitas"
@@ -18,7 +18,7 @@ export function DataPrefetcher() {
   const { setCacheItem, getCacheItem } = useCache()
   const { data: fornecedores, isLoading: isLoadingFornecedores, isError: isErrorFornecedores } = useGetFornecedores({ pageNumber: PAGE_NUMBER, pageSize: PAGE_SIZE })
   const { data: linhasOrcamentarias, isLoading: isLoadingLinhasOrcamentarias, isError: isErrorLinhasOrcamentarias } = useGetLinhasOrcamentarias({ pageNumber: PAGE_NUMBER, pageSize: PAGE_SIZE })
-  const { data: categorias, isLoading: isLoadingCategorias, isError: isErrorCategorias } = useGetCategorias({ pageNumber: PAGE_NUMBER, pageSize: PAGE_SIZE })
+  // const { data: categorias, isLoading: isLoadingCategorias, isError: isErrorCategorias } = useGetCategorias({ pageNumber: PAGE_NUMBER, pageSize: PAGE_SIZE }) // REMOVIDO: endpoint não existe
   const { data: fontesRecurso, isLoading: isLoadingFontesRecurso, isError: isErrorFontesRecurso } = useGetFontesRecurso({ pageNumber: PAGE_NUMBER, pageSize: PAGE_SIZE })
   const { data: organizacoesSociais, isLoading: isLoadingOrganizacoesSociais, isError: isErrorOrganizacoesSociais } = useGetOrganizacoesSociais({ pageNumber: PAGE_NUMBER, pageSize: PAGE_SIZE })
   const { data: receitas, isLoading: isLoadingReceitas, isError: isErrorReceitas } = useGetReceitas({ pageNumber: PAGE_NUMBER, pageSize: PAGE_SIZE })
@@ -46,15 +46,16 @@ export function DataPrefetcher() {
     }
   }, [linhasOrcamentarias, isLoadingLinhasOrcamentarias, isErrorLinhasOrcamentarias, setCacheItem, getCacheItem])
 
-  useEffect(() => {
-    if (!isLoadingCategorias && !isErrorCategorias && categorias) {
-      const cachedCategorias = getCacheItem("categorias")
-      if (!cachedCategorias || JSON.stringify(cachedCategorias) !== JSON.stringify(categorias.data)) {
-        console.log("Caching categorias...")
-        setCacheItem("categorias", categorias.data)
-      }
-    }
-  }, [categorias, isLoadingCategorias, isErrorCategorias, setCacheItem, getCacheItem])
+  // REMOVIDO: useEffect de categorias pois o endpoint /categories/despesas não existe no backend
+  // useEffect(() => {
+  //   if (!isLoadingCategorias && !isErrorCategorias && categorias) {
+  //     const cachedCategorias = getCacheItem("categorias")
+  //     if (!cachedCategorias || JSON.stringify(cachedCategorias) !== JSON.stringify(categorias.data)) {
+  //       console.log("Caching categorias...")
+  //       setCacheItem("categorias", categorias.data)
+  //     }
+  //   }
+  // }, [categorias, isLoadingCategorias, isErrorCategorias, setCacheItem, getCacheItem])
 
   useEffect(() => {
     if (!isLoadingFontesRecurso && !isErrorFontesRecurso && fontesRecurso) {
